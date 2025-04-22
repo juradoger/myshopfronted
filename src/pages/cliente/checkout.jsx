@@ -8,8 +8,8 @@ export default function Checkout() {
   const [currentStep, setCurrentStep] = useState(1) // 1: Información, 2: Compra, 3: Pago
   const [formData, setFormData] = useState({
     email: "ejemplo@gmail.com",
-    address: "20 West Cote Drive Thackley Bradford, United Kingdom",
-    shippingMethod: "Canada Post SmallPacket International Surface",
+    address: "Bolivia Tarija central ",
+    shippingMethod: "Brazil paqueteria internacional meguin",
     shippingPrice: 9.68,
     shippingDays: "28 to 34 business days",
     cardNumber: "",
@@ -325,16 +325,16 @@ export default function Checkout() {
                   type="radio"
                   name="shipping"
                   className="mr-3"
-                  checked={formData.shippingMethod === "Canada Post SmallPacket International Surface"}
+                  checked={formData.shippingMethod === "Brazil paqueteria internacional meguin"}
                   onChange={() =>
                     handleShippingMethodChange(
-                      "Canada Post SmallPacket International Surface",
+                      "Brazil paqueteria internacional meguin",
                       9.68,
-                      "28 to 34 business days",
+                      "28 a 34 dias habiles",
                     )
                   }
                 />
-                <span>Canada Post Small Packet International Surface</span>
+                <span>Brazil paqueteria internacional meguin</span>
               </div>
               <span>Bs. 9.68</span>
             </label>
@@ -348,16 +348,16 @@ export default function Checkout() {
                   type="radio"
                   name="shipping"
                   className="mr-3"
-                  checked={formData.shippingMethod === "Canada Post Small Packet International Air"}
+                  checked={formData.shippingMethod === "Brazil paqueteria internacional meguin"}
                   onChange={() =>
                     handleShippingMethodChange(
-                      "Canada Post Small Packet International Air",
+                      "Brazil paqueteria internacional meguin",
                       11.63,
                       "6 to 10 business days",
                     )
                   }
                 />
-                <span>Canada Post Small Packet International Air</span>
+                <span>Brazil paqueteria internacional meguin</span>
               </div>
               <span>Bs. 11.63</span>
             </label>
@@ -371,20 +371,20 @@ export default function Checkout() {
                   type="radio"
                   name="shipping"
                   className="mr-3"
-                  checked={formData.shippingMethod === "Canada Post Small Packet International Air (28-34)"}
+                  checked={formData.shippingMethod === "Brazil paqueteria internacional meguin (28-34)"}
                   onChange={() =>
                     handleShippingMethodChange(
-                      "Canada Post Small Packet International Air (28-34)",
+                      "Brazil paqueteria internacional meguin (28-34)",
                       56.57,
-                      "28 to 34 business days",
+                      "28 a 34 dias habiles",
                     )
                   }
                 />
-                <span>Canada Post Small Packet International Air</span>
+                <span>Brazil paqueteria internacional meguin</span>
               </div>
               <span>Bs. 56.57</span>
             </label>
-            <div className="pl-6 text-sm text-gray-600 pb-2">28 to 34 business days</div>
+            <div className="pl-6 text-sm text-gray-600 pb-2">28 a 34 dias habiles</div>
           </div>
 
           <div>
@@ -394,20 +394,20 @@ export default function Checkout() {
                   type="radio"
                   name="shipping"
                   className="mr-3"
-                  checked={formData.shippingMethod === "Canada Post Small Packet International Air (4-7)"}
+                  checked={formData.shippingMethod === "Brazil paqueteria internacional meguin (4-7)"}
                   onChange={() =>
                     handleShippingMethodChange(
-                      "Canada Post Small Packet International Air (4-7)",
+                      "Brazil paqueteria internacional meguin (4-7)",
                       92.18,
-                      "4 to 7 business days",
+                      "4 a 7 dias habiles",
                     )
                   }
                 />
-                <span>Canada Post Small Packet International Air</span>
+                <span>Brazil paqueteria internacional meguin</span>
               </div>
               <span>Bs. 92.18</span>
             </label>
-            <div className="pl-6 text-sm text-gray-600 pb-2">4 to 7 business days</div>
+            <div className="pl-6 text-sm text-gray-600 pb-2">4 a 7 dias habiles</div>
           </div>
         </div>
 
@@ -580,14 +580,14 @@ export default function Checkout() {
             <div className="border rounded mb-3">
               <label className="flex items-center p-4 cursor-pointer">
                 <input type="radio" name="address" className="mr-3" checked />
-                <span>Canada Post SmallPacket International Surface</span>
+                <span>Brazil paqueteria internacional meguin</span>
               </label>
             </div>
 
             <div className="border rounded">
               <label className="flex items-center p-4 cursor-pointer">
                 <input type="radio" name="address" className="mr-3" />
-                <span>Canada Post SmallPacket International Surface</span>
+                <span>Brazil paqueteria internacional meguin</span>
               </label>
             </div>
           </div>
