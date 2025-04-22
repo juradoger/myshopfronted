@@ -117,23 +117,6 @@ const NavbarAdmin = () => {
             </div>
           </div>
         </nav>
-
-        {/* Page Header */}
-        <header className="p-6">
-          <div className="flex justify-between items-center">
-            <h1 className="text-xl font-semibold">Todos los productos</h1>
-            <button className="bg-black text-white px-4 py-2 rounded text-sm w-sm sm:w-auto hover:bg-black hover:text-white transition-colors">
-              AÑADIR NUEVO PRODUCTO
-            </button>
-          </div>
-          <div className="text-sm text-gray-500 mt-1 flex items-center">
-            <span>Inicio</span>
-            <ChevronRight size={14} className="mx-1" />
-            <span>Todos los productos</span>
-          </div>
-        </header>
-
-        {/* Contenido principal aquí */}
       </div>
     </>
   )
