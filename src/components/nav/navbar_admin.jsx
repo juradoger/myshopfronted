@@ -1,8 +1,16 @@
-import { useState } from "react"
-import { Search, Bell, ChevronDown, ChevronRight, Heart } from "lucide-react"
+"use client"
 
-const NavbarAdmin = ({children}) => {
+import { useState } from "react"
+import { Search, Bell, ChevronDown, Heart } from "lucide-react"
+import PopupBusquedaProducto from "../popups/admin/popupbusquedaproducto"
+import PopupNotificaciones from "../popups/admin/popupnotificaciones"
+import PopupLogout from "../popups/admin/popuplogout"
+
+const NavbarAdmin = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const [isAdminOpen, setIsAdminOpen] = useState(false)
 
   const categories = [
     { name: "Blusas", count: "21" },
@@ -15,6 +23,30 @@ const NavbarAdmin = ({children}) => {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen)
+  }
+
+  // Close all popups except the one being opened
+  const handlePopupToggle = (popup) => {
+    if (popup === "search") {
+      setIsSearchOpen(!isSearchOpen)
+      setIsNotificationsOpen(false)
+      setIsAdminOpen(false)
+    } else if (popup === "notifications") {
+      setIsNotificationsOpen(!isNotificationsOpen)
+      setIsSearchOpen(false)
+      setIsAdminOpen(false)
+    } else if (popup === "admin") {
+      setIsAdminOpen(!isAdminOpen)
+      setIsSearchOpen(false)
+      setIsNotificationsOpen(false)
+    }
+  }
+
+  // Close all popups when clicking outside
+  const handleClickOutside = () => {
+    setIsSearchOpen(false)
+    setIsNotificationsOpen(false)
+    setIsAdminOpen(false)
   }
 
   return (
@@ -32,7 +64,7 @@ const NavbarAdmin = ({children}) => {
         </div>
 
         {/* Menú principal */}
-        <div className="p-4 space-y-1">
+        <div className="p-6 space-y-1">
           {["PANEL", "TODOS LOS PRODUCTOS", "LISTA DE PEDIDOS"].map((item, idx) => (
             <div
               key={idx}
@@ -60,9 +92,7 @@ const NavbarAdmin = ({children}) => {
                 className="flex items-center justify-between py-1.5 px-3 hover:bg-black hover:text-white text-black rounded cursor-pointer transition-colors"
               >
                 <span className="text-sm">{category.name}</span>
-                <span className="bg-black text-white px-2 py-0.5 rounded-md text-xs">
-                  {category.count}
-                </span>
+                <span className="bg-black text-white px-2 py-0.5 rounded-md text-xs">{category.count}</span>
               </div>
             ))}
           </div>
@@ -71,49 +101,52 @@ const NavbarAdmin = ({children}) => {
 
       {/* Main Content Area */}
       <div
-        className={`${
-          isSidebarOpen ? "ml-64" : "ml-0"
-        } transition-all duration-300 min-h-screen bg-gray-100`}
+        className={`${isSidebarOpen ? "ml-64" : "ml-0"} transition-all duration-300 min-h-screen bg-gray-100`}
+        onClick={handleClickOutside}
       >
         {/* Top Navigation Bar */}
-        <nav className="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-30">
+        <nav className="bg-white shadow-sm p-3.5 flex justify-between items-center sticky top-0 z-30">
           <div className="flex items-center gap-4">
             {/* Hamburger menu */}
             <button onClick={toggleSidebar} className="lg:hidden">
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-
-            {/* Breadcrumb */}
-            <div className="flex items-center text-sm">
-              <span className="text-gray-600">Inicio</span>
-              <ChevronRight size={14} className="mx-1 text-gray-400" />
-              <span className="text-gray-600">Todos los productos</span>
-            </div>
           </div>
 
           {/* Right side navbar */}
           <div className="flex items-center gap-6">
-            <div className="cursor-pointer">
-              <Search className="w-5 h-5 text-gray-500" />
+            <div className="cursor-pointer relative">
+              <Search
+                className="w-5 h-5 text-gray-500"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handlePopupToggle("search")
+                }}
+              />
+              <PopupBusquedaProducto isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
             </div>
-            <div className="cursor-pointer">
-              <Bell className="w-5 h-5 text-gray-500" />
+            <div className="cursor-pointer relative">
+              <Bell
+                className="w-5 h-5 text-gray-500"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handlePopupToggle("notifications")
+                }}
+              />
+              <PopupNotificaciones isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
             </div>
-            <div className="flex items-center space-x-1 bg-gray-100 px-3 py-1 rounded text-sm cursor-pointer">
+            <div
+              className="flex items-center space-x-1 bg-black text-white px-3 py-1 rounded text-sm cursor-pointer relative"
+              onClick={(e) => {
+                e.stopPropagation()
+                handlePopupToggle("admin")
+              }}
+            >
               <span className="font-medium">ADMIN</span>
               <ChevronDown size={16} />
+              <PopupLogout isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
             </div>
           </div>
         </nav>

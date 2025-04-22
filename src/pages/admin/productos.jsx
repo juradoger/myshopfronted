@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { fetchClothingProducts } from "../../services/api"
 import { FaPlus } from "react-icons/fa"
+import { ChevronRight } from "lucide-react"
 
 // Importante: No importes el AdminLayout aquí si estás usando rutas anidadas
 export default function Productos() {
@@ -54,7 +55,7 @@ export default function Productos() {
       <div className="flex justify-between items-center mb-6">
         <div className="text-xl font-bold">
           <h1>Todos los productos</h1>
-          <p className="text-sm text-gray-500">Inicio {">"} Todos los productos</p>
+          <p className="flex text-start text-sm font-light text-gray-500">Inicio <ChevronRight size={14} className=" flex-wrap mx-2 my-1 text-gray-400" /> Todos los productos</p>
         </div>
         <button className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2">
           <FaPlus size={14} />
@@ -100,11 +101,11 @@ export default function Productos() {
                     <span className="text-sm font-bold">BS. {product.price.toFixed(2)}</span>
                   </div>
                   <div className="mb-4">
-                    <h3 className="text-sm font-bold mb-1">Resumen:</h3>
+                    <h3 className="text-sm font-bold mb-1">Descripcion:</h3>
                     <p className="text-sm text-gray-600">{product.description}</p>
                   </div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm">Ventas</span>
+                    <span className="text-sm">Salida</span>
                     <span className="text-sm">{product.sales}</span>
                   </div>
                   <div className="mb-4">
@@ -129,9 +130,9 @@ export default function Productos() {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className="px-3 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                className="px-3 py-2 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50"
               >
-                &lt;
+                <ChevronRight size={16} className="transform rotate-180" />
               </button>
 
               {[...Array(Math.min(totalPages, 5))].map((_, index) => {
@@ -170,17 +171,9 @@ export default function Productos() {
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                className="px-3 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 flex items-center gap-1"
               >
-                &gt;
-              </button>
-
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className="ml-1 px-3 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-              >
-                NEXT &gt;
+                NEXT <ChevronRight size={16} />
               </button>
             </nav>
           </div>

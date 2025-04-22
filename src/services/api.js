@@ -40,7 +40,7 @@ const CLOTHING_DATA = [
     description:
       "Pantalón elegante de corte recto para ocasiones formales y eventos sociales. Confeccionado con los mejores materiales.",
     image:
-      "https://images.unsplash.com/photo-1604176424472-37e8bb659d46?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
+      "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
     category: "men's clothing",
     stock: 120,
     sales: 1309,

@@ -1,8 +1,10 @@
 import { useState } from "react"
 import { Search, User, ShoppingBag, Heart, Menu, X, ChevronDown } from "lucide-react"
+import LoginPopup from "../popups/cliente/login_popup"
 
 const NavbarCliente = ({children}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState(null)
   const [isFilterOpen, setIsFilterOpen] = useState({
     categories: false,
@@ -10,7 +12,9 @@ const NavbarCliente = ({children}) => {
     size: false,
     price: false,
   })
-
+  const toggleLoginPopup = () => {
+    setIsLoginOpen(!isLoginOpen)
+  }
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen)
   }
@@ -22,21 +26,19 @@ const NavbarCliente = ({children}) => {
     })
   }
 
-  const mainCategories = ["Mujer", "Hombre", "Acerca de", "Everlast Stores"]
+  const mainCategories = ["Mujer", "Hombre", "Acerca de", "Tiendas"]
   const subCategories = [
     "Sobre",
-    "Tiendas",
     "Fábricas",
     "Iniciativas ambientales",
     "Nuestro compromiso",
     "Reporte de Impacto",
-    "Moda+",
+    "Moda",
   ]
 
   const filterCategories = {
     categories: [
       { name: "Ropa - Para todos los géneros", checked: false },
-      { name: "Accesorios y zapatos", checked: false },
       { name: "Artículos, Weekenders & Complementos", checked: false },
       { name: "Camisas de vestir y camisas planchadas", checked: false },
       { name: "Lino colorido y estampado", checked: false },
@@ -75,10 +77,10 @@ const NavbarCliente = ({children}) => {
     <div className="w-full">
       {/* Top Navigation */}
       <div className="border-b border-gray-200 sticky top-0 z-30 bg-white py-4">
-        <div className=" px-20 flex justify-between items-center py-2">
+        <div className=" px-10 flex justify-between items-center py-2">
           <div className="flex items-center space-x-6">
             <button className="md:hidden" onClick={toggleSidebar}>
-              <Menu size={20} className="mx-8"/>
+              <Menu size={20} className="mx-6"/>
             </button>
             <div className="hidden md:flex space-x-6">
               {mainCategories.map((category, index) => (
@@ -102,7 +104,7 @@ const NavbarCliente = ({children}) => {
             <button className="hover:text-gray-600">
               <Search size={20} />
             </button>
-            <button className="hover:text-gray-600">
+            <button className="hover:text-gray-600" onClick={toggleLoginPopup}>
               <User size={20} />
             </button>
             <button className="hover:text-gray-600">
@@ -159,8 +161,8 @@ const NavbarCliente = ({children}) => {
       </div>
 
       {/* Product Filters - Sidebar */}
-      <div className="px-16 flex flex-col md:flex-row">
-        <div className="w-full md:w-1/4 p-4">
+      <div className="px-10 flex flex-col md:flex-row p-4">
+        <div className="w-full md:w-1/4 p-6">
           {/* Categorías */}
           <div className="mb-6">
             <div className="flex justify-between items-center mb-2">
@@ -174,7 +176,7 @@ const NavbarCliente = ({children}) => {
                 {filterCategories.categories.map((item, index) => (
                   <div key={index} className="flex items-start space-x-2">
                     <input type="checkbox" id={`category-${index}`} className="mr-2 mt-1 h-4 w-4 shrink-0" />
-                    <label htmlFor={`category-${index}`} className="text-sm leading-tight text-left break-words max-w-[90%]">
+                    <label htmlFor={`category-${index}`} className="mb-1 py-1.5 text-xs leading-tight text-left break-words max-w-[90%]">
                       {item.name}
                     </label>
                   </div>
@@ -231,6 +233,8 @@ const NavbarCliente = ({children}) => {
 
         {children}
       </div>
+       {/* Login Popup */}
+       <LoginPopup isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </div>
   )
 }

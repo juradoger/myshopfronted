@@ -1,3 +1,4 @@
+import { HeartCrack, HeartIcon } from "lucide-react"
 import { useState } from "react"
 import { FaGoogle, FaApple, FaFacebook } from "react-icons/fa"
 
@@ -38,7 +39,7 @@ const LoginRegistrar = () => {
     return (
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">♥MYSHOP - Catálogo</h1>
+          <h1 className="text-4xl font-extralight">♥MYSHOP - Catálogo</h1>
           <button onClick={() => setIsLoggedIn(false)} className="px-4 py-2 bg-black text-white rounded">
             Cerrar Sesión
           </button>
@@ -54,9 +55,9 @@ const LoginRegistrar = () => {
         {/* Imagen de fondo (lado izquierdo) */}
         <div className="hidden md:block w-1/2 h-full relative">
           <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-hotk1u6vcMzGwxl4q5ZdATM3CX7YFx.png"
+            src="src/assets/img/portada.png"
             alt="Modelo MYSHOP"
-            className="w-full h-full object-cover"
+            className="w-full h-full"
           />
         </div>
 
@@ -67,8 +68,8 @@ const LoginRegistrar = () => {
             <div className="w-full max-w-md">
               <div className="text-center mb-6">
                 <div className="flex justify-center items-center mb-2">
-                  <span className="text-sm">♥</span>
-                  <span className="font-bold text-sm">MYSHOP</span>
+                  <span className="text-sm"><HeartIcon size={20} /></span>
+                  <span className="font-extralight text-lg">MYSHOP</span>
                 </div>
                 <h2 className="text-2xl font-bold">Acceso</h2>
                 <p className="text-sm text-gray-500">
