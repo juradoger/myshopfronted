@@ -1,13 +1,17 @@
 import React from "react";
 import NavbarAdmin from "../components/nav/navbar_admin";
 import FooterAdmin from "../components/footer/footeradmin";
-const AdminLayout = ({ children }) => {
+import { Outlet } from "react-router-dom";
+
+
+const AdminLayout = () => {
     return (
         <>
-        <NavbarAdmin />
+        <NavbarAdmin>
             <main>
-                {children}
+              <Outlet/>
             </main>
+        </NavbarAdmin>
         <FooterAdmin />
         </>
     )

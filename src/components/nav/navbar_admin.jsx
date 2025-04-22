@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Search, Bell, ChevronDown, ChevronRight, Heart } from "lucide-react"
 
-const NavbarAdmin = () => {
+const NavbarAdmin = ({children}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   const categories = [
@@ -117,6 +117,8 @@ const NavbarAdmin = () => {
             </div>
           </div>
         </nav>
+
+        {children}
       </div>
     </>
   )

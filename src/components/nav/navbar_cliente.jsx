@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Search, User, ShoppingBag, Heart, Menu, X, ChevronDown } from "lucide-react"
 
-const NavbarCliente = () => {
+const NavbarCliente = ({children}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState(null)
   const [isFilterOpen, setIsFilterOpen] = useState({
@@ -75,7 +75,7 @@ const NavbarCliente = () => {
     <div className="w-full">
       {/* Top Navigation */}
       <div className="border-b border-gray-200 sticky top-0 z-30 bg-white py-4">
-        <div className="container mx-auto px-2 flex justify-between items-center py-2">
+        <div className=" px-20 flex justify-between items-center py-2">
           <div className="flex items-center space-x-6">
             <button className="md:hidden" onClick={toggleSidebar}>
               <Menu size={20} className="mx-8"/>
@@ -114,7 +114,7 @@ const NavbarCliente = () => {
 
       {/* Secondary Navigation */}
       <div className="border-b border-gray-200 hidden md:block sticky top-0 z-20 bg-white py-2">    
-        <div className="container mx-auto px-4">
+        <div className=" px-4">
           <div className="flex justify-center space-x-6 py-2">
             {subCategories.map((category, index) => (
               <button key={index} className="text-sm hover:underline">
@@ -159,7 +159,7 @@ const NavbarCliente = () => {
       </div>
 
       {/* Product Filters - Sidebar */}
-      <div className="container mx-auto px-6 flex flex-col md:flex-row">
+      <div className="px-16 flex flex-col md:flex-row">
         <div className="w-full md:w-1/4 p-4">
           {/* Categorías */}
           <div className="mb-6">
@@ -228,6 +228,8 @@ const NavbarCliente = () => {
             )}
           </div>
         </div>
+
+        {children}
       </div>
     </div>
   )
