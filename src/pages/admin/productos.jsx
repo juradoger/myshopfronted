@@ -50,7 +50,7 @@ export default function Productos() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 bg-white">
+    <div className=" px-10 py-6 bg-white">
       <div className="flex justify-between items-center mb-6">
         <div className="text-xl font-bold">
           <h1>Todos los productos</h1>
