@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { fetchClothingProductById } from "../../services/api" // Importamos la función correcta
 import { ChevronRight, Truck, RotateCcw, Package } from "lucide-react"

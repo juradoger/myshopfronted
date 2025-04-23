@@ -40,7 +40,7 @@ const CLOTHING_DATA = [
     description:
       "Pantalón elegante de corte recto para ocasiones formales y eventos sociales. Confeccionado con los mejores materiales.",
     image:
-      "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
+      "https://images.unsplash.com/photo-1604176424472-37e8bb659d46?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
     category: "men's clothing",
     stock: 120,
     sales: 1309,
@@ -163,15 +163,68 @@ const CLOTHING_DATA = [
   },
 ]
 
+
+//INICIOOOOO
+
+// Definir imágenes personalizadas para cada categoría
+const CUSTOM_IMAGES = {
+  // Imagen para el hero/banner principal
+  hero: "https://images.unsplash.com/photo-1511746315387-c4a76990fdce",
+  
+  // Imágenes para categorías
+  categories: {
+    "camisas": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10",
+    "vaqueros": "https://images.unsplash.com/photo-1542272604-787c3835535d",
+    "camisetas": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
+    "pantalones": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a",
+    "sueteres": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105",
+    "ropa_calle": "https://images.unsplash.com/photo-1523398002811-999ca8dec234"
+  },
+  
+  // Imágenes para categorías populares
+  popular: {
+    "sueteres_mujeres": "https://images.unsplash.com/photo-1589310243389-96a5483213a8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+    "parte_inferior_mujeres": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1",
+    "botas_mujeres": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2",
+    "mejores_ventas_hombres": "https://images.unsplash.com/photo-1617137968427-85924c800a22"
+  },
+  
+  // Imágenes para productos por categoría (para reemplazar las de la API)
+  products: {
+    "men's clothing": [
+      "https://images.unsplash.com/photo-1617137968427-85924c800a22",
+      "https://images.unsplash.com/photo-1516826957135-700dedea698c",
+      "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8",
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc"
+    ],
+    "women's clothing": [
+      "https://images.unsplash.com/photo-1576763788886-0a6c68e2c3a3",
+      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1",
+      "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa",
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f"
+    ]
+  }
+};
+
 /**
- * Obtiene productos de ropa con datos completos
+ * Obtiene productos de ropa con datos completos e imágenes personalizadas
  * @returns {Promise<Array>} - Array de productos de ropa
  */
 export const fetchClothingProducts = async () => {
   try {
-    // En este caso, usamos directamente los datos curados para asegurar
-    // imágenes de alta calidad y datos completos para el diseño
-    return CLOTHING_DATA
+    // Si tienes CLOTHING_DATA definido, modifícalo para usar imágenes personalizadas
+    const productsWithCustomImages = CLOTHING_DATA.map((product, index) => {
+      const category = product.category;
+      const images = CUSTOM_IMAGES.products[category] || [];
+      const imageIndex = index % images.length;
+      
+      return {
+        ...product,
+        image: images[imageIndex] || product.image // Usa imagen personalizada o la original como fallback
+      };
+    });
+    
+    return productsWithCustomImages;
 
     // Comentado: Código para obtener datos reales de API
     // const response = await fetch(CLOTHING_API);
@@ -179,82 +232,198 @@ export const fetchClothingProducts = async () => {
     //   throw new Error("Error al obtener productos de ropa");
     // }
     // const data = await response.json();
-    // return transformClothingData(data);
+    // return transformClothingDataWithCustomImages(data);
   } catch (error) {
-    console.error("Error en fetchClothingProducts:", error)
-    // Si falla, devolver los datos locales como fallback
-    return CLOTHING_DATA
+    console.error("Error en fetchClothingProducts:", error);
+    // Si falla, devolver los datos locales como fallback con imágenes personalizadas
+    return CLOTHING_DATA.map((product, index) => {
+      const category = product.category;
+      const images = CUSTOM_IMAGES.products[category] || [];
+      const imageIndex = index % images.length;
+      
+      return {
+        ...product,
+        image: images[imageIndex] || product.image
+      };
+    });
   }
-}
+};
 
 /**
- * Obtiene un producto de ropa por su ID
- * @param {number} id - ID del producto
- * @returns {Promise<Object>} - Datos del producto
+ * Transforma los datos de productos añadiendo imágenes personalizadas
+ * @param {Array} products - Productos originales de la API
+ * @returns {Array} - Productos transformados con imágenes personalizadas
  */
-export const fetchClothingProductById = async (id) => {
-  try {
-    // Buscar primero en los datos locales
-    const localProduct = CLOTHING_DATA.find((product) => product.id === Number(id))
-    if (localProduct) {
-      return localProduct
+function transformClothingDataWithCustomImages(products) {
+  return products.map((product, index) => {
+    const transformedProduct = transformSingleClothingItem(product);
+    const category = product.category;
+    
+    // Asignar imagen personalizada según la categoría
+    if (CUSTOM_IMAGES.products[category]) {
+      const images = CUSTOM_IMAGES.products[category];
+      const imageIndex = index % images.length;
+      transformedProduct.image = images[imageIndex];
     }
-
-    // Si no se encuentra localmente, intentar obtenerlo de la API
-    const response = await fetch(`https://fakestoreapi.com/products/${id}`)
-    if (!response.ok) {
-      throw new Error("Error al obtener el producto")
-    }
-
-    const product = await response.json()
-    if (product.category === "men's clothing" || product.category === "women's clothing") {
-      return transformSingleClothingItem(product)
-    } else {
-      throw new Error("El producto no es una prenda de ropa")
-    }
-  } catch (error) {
-    console.error("Error en fetchClothingProductById:", error)
-    throw error
-  }
+    
+    return transformedProduct;
+  });
 }
 
 /**
- * Transforma los datos de un producto individual
+ * Transforma los datos de un producto individual con imagen personalizada
  * @param {Object} product - Producto original de la API
  * @returns {Object} - Producto transformado
  */
 function transformSingleClothingItem(product) {
-  const salesValue = Math.floor(Math.random() * 1500) + 500
-  const salesPercentage = Math.floor(Math.random() * 100)
-  const stock = Math.floor(Math.random() * 100) + 50
+  const salesValue = Math.floor(Math.random() * 1500) + 500;
+  const salesPercentage = Math.floor(Math.random() * 100);
+  const stock = Math.floor(Math.random() * 100) + 50;
+  
+  // Buscar imagen personalizada para esta categoría
+  let customImage = product.image;
+  if (CUSTOM_IMAGES.products[product.category]) {
+    const images = CUSTOM_IMAGES.products[product.category];
+    const imageIndex = product.id % images.length;
+    customImage = images[imageIndex];
+  }
 
   return {
     id: product.id,
     title: mapToClothingTitle(product.title, product.category),
     price: product.price,
     description: product.description,
-    image: product.image,
+    image: customImage, // Usar imagen personalizada
     category: product.category,
     stock: stock,
     sales: salesValue,
     salesPercentage: salesPercentage,
-  }
+  };
 }
 
 /**
- * Mapea títulos de productos a títulos de ropa específicos
- * @param {string} title - Título original
- * @param {string} category - Categoría del producto
- * @returns {string} - Título transformado
+ * Obtiene un producto de ropa por su ID con imagen personalizada
+ * @param {number} id - ID del producto
+ * @returns {Promise<Object>} - Datos del producto
  */
-function mapToClothingTitle(title, category) {
-  const menClothingTitles = ["Chaqueta Elegante", "Saco de Vestir", "Pantalón Elegante", "Chaleco Elegante"]
+export const fetchClothingProductById = async (id) => {
+  try {
+    // Buscar primero en los datos locales
+    const localProduct = CLOTHING_DATA.find((product) => product.id === Number(id));
+    if (localProduct) {
+      // Aplicar imagen personalizada
+      const category = localProduct.category;
+      if (CUSTOM_IMAGES.products[category]) {
+        const images = CUSTOM_IMAGES.products[category];
+        const imageIndex = localProduct.id % images.length;
+        return {
+          ...localProduct,
+          image: images[imageIndex]
+        };
+      }
+      return localProduct;
+    }
 
-  const womenClothingTitles = ["Camisa de Seda", "Pantalón de Mujer Elegante", "Chaqueta Elegante", "Blusa Formal"]
+    // Si no se encuentra localmente, intentar obtenerlo de la API
+    const response = await fetch(`https://fakestoreapi.com/products/${id}`);
+    if (!response.ok) {
+      throw new Error("Error al obtener el producto");
+    }
 
-  if (category === "men's clothing") {
-    return menClothingTitles[Math.floor(Math.random() * menClothingTitles.length)]
-  } else {
-    return womenClothingTitles[Math.floor(Math.random() * womenClothingTitles.length)]
+    const product = await response.json();
+    if (product.category === "men's clothing" || product.category === "women's clothing") {
+      return transformSingleClothingItem(product);
+    } else {
+      throw new Error("El producto no es una prenda de ropa");
+    }
+  } catch (error) {
+    console.error("Error en fetchClothingProductById:", error);
+    throw error;
   }
-}
+};
+
+/**
+ * Obtiene imágenes personalizadas para el componente Inicio
+ * @returns {Object} - Objeto con imágenes para hero, categorías y populares
+ */
+export const getCustomImagesForHome = () => {
+  return {
+    hero: CUSTOM_IMAGES.hero,
+    categories: [
+      { name: "CAMISAS", image: CUSTOM_IMAGES.categories.camisas },
+      { name: "VAQUEROS", image: CUSTOM_IMAGES.categories.vaqueros },
+      { name: "CAMISETAS", image: CUSTOM_IMAGES.categories.camisetas },
+      { name: "PANTALONES", image: CUSTOM_IMAGES.categories.pantalones },
+      { name: "SUÉTERES", image: CUSTOM_IMAGES.categories.sueteres },
+      { name: "ROPA DE CALLE", image: CUSTOM_IMAGES.categories.ropa_calle },
+    ],
+    popular: [
+      { name: "Suéteres de mujeres", image: CUSTOM_IMAGES.popular.sueteres_mujeres },
+      { name: "Parte inferior de mujeres", image: CUSTOM_IMAGES.popular.parte_inferior_mujeres },
+      { name: "Botas de mujeres", image: CUSTOM_IMAGES.popular.botas_mujeres },
+      { name: "Mejores ventas - hombres", image: CUSTOM_IMAGES.popular.mejores_ventas_hombres },
+    ]
+  };
+};
+
+// Mantener las funciones originales de la API
+export const fetchProducts = async () => {
+  try {
+    const response = await fetch("https://fakestoreapi.com/products");
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
+};
+
+export const fetchCategories = async () => {
+  try {
+    const response = await fetch("https://fakestoreapi.com/products/categories");
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error;
+  }
+};
+
+export const fetchProductsByCategory = async (category) => {
+  try {
+    const response = await fetch(`https://fakestoreapi.com/products/category/${category}`);
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Aplicar imágenes personalizadas a los productos por categoría
+    if (CUSTOM_IMAGES.products[category]) {
+      return data.map((product, index) => {
+        const images = CUSTOM_IMAGES.products[category];
+        const imageIndex = index % images.length;
+        return {
+          ...product,
+          image: images[imageIndex]
+        };
+      });
+    }
+    
+    return data;
+  } catch (error) {
+    console.error(`Error fetching products in category ${category}:`, error);
+    throw error;
+  }
+};

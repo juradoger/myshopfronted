@@ -1,10 +1,13 @@
 import { useState } from "react"
 import { Search, User, ShoppingBag, Heart, Menu, X, ChevronDown } from "lucide-react"
 import LoginPopup from "../popups/cliente/login_popup"
+import Carrito from "../../pages/cliente/carrito"
 
 const NavbarCliente = ({children}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false)
+   // Estado para controlar la visibilidad del carrito
+  const [isCartOpen, setIsCartOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState(null)
   const [isFilterOpen, setIsFilterOpen] = useState({
     categories: false,
@@ -12,6 +15,16 @@ const NavbarCliente = ({children}) => {
     size: false,
     price: false,
   })
+    // Función para abrir/cerrar el carrito
+    const toggleCart = () => {
+      setIsCartOpen(!isCartOpen)
+    }
+  
+    // Función para cerrar el carrito
+    const closeCart = () => {
+      setIsCartOpen(false)
+    }
+  
   const toggleLoginPopup = () => {
     setIsLoginOpen(!isLoginOpen)
   }
@@ -76,8 +89,8 @@ const NavbarCliente = ({children}) => {
   return (
     <div className="w-full">
       {/* Top Navigation */}
-      <div className="border-b border-gray-200 sticky top-0 z-30 bg-white py-4">
-        <div className=" px-10 flex justify-between items-center py-2">
+      <div className="px-10 border-b border-gray-200 sticky top-0 z-30 bg-white py-4">
+        <div className="flex justify-between items-center">
           <div className="flex items-center space-x-6">
             <button className="md:hidden" onClick={toggleSidebar}>
               <Menu size={20} className="mx-6"/>
@@ -104,10 +117,10 @@ const NavbarCliente = ({children}) => {
             <button className="hover:text-gray-600">
               <Search size={20} />
             </button>
-            <button className="hover:text-gray-600" onClick={toggleLoginPopup}>
+            <button className="hover:text-gray-600" onClick={() => setIsLoginPopupOpen(true)}>
               <User size={20} />
             </button>
-            <button className="hover:text-gray-600">
+            <button className="hover:text-gray-600" onClick={() => setIsCartOpen(true)}>
               <ShoppingBag size={20} />
             </button>
           </div>
@@ -161,7 +174,7 @@ const NavbarCliente = ({children}) => {
       </div>
 
       {/* Product Filters - Sidebar */}
-      <div className="px-10 flex flex-col md:flex-row p-4">
+      <div className="flex flex-col md:flex-row p-4">
         <div className="w-full md:w-1/4 p-6">
           {/* Categorías */}
           <div className="mb-6">
@@ -233,8 +246,9 @@ const NavbarCliente = ({children}) => {
 
         {children}
       </div>
-       {/* Login Popup */}
-       <LoginPopup isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+
+        <LoginPopup isOpen={isLoginPopupOpen} onClose={() => setIsLoginPopupOpen(false)} />
+        <Carrito isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
   )
 }

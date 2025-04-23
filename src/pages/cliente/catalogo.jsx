@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { fetchClothingProducts } from "../../services/api" // Ajusta la ruta según tu estructura de proyecto
 

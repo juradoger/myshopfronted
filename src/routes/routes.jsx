@@ -11,6 +11,7 @@ import Dashboard from "../pages/admin/dashboard";
 import TablaProductos from "../pages/admin/tablaproductos";
 import Catalogo from "../pages/cliente/catalogo";
 import DetallesPedido from "../pages/admin/detalleventas";
+import Inicio from "../pages/cliente/inicio";
 
 export function MisRutas() {
   return (
@@ -19,7 +20,7 @@ export function MisRutas() {
         <Route path="/" element={<ClientLayout/>} >
           <Route path="checkout" element={<Checkout/>} />
           {/* Rutas anidadas dentro del ClientLayout */}
-          <Route path="/" element={<h1>Inicio</h1>} />
+          <Route path="/" element={<Inicio/>} />
           <Route path="/catalogo" element={<Catalogo/>}/>
           <Route path="/detalleproducto" element={<DetalleProducto />}/>
 

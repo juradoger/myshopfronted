@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { ChevronRight, Upload, X } from "lucide-react"
 
