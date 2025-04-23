@@ -5,12 +5,30 @@ import { Search, Bell, ChevronDown, Heart } from "lucide-react"
 import PopupBusquedaProducto from "../popups/admin/popupbusquedaproducto"
 import PopupNotificaciones from "../popups/admin/popupnotificaciones"
 import PopupLogout from "../popups/admin/popuplogout"
+import { useNavigate } from "react-router-dom"
 
+//const rutas = ["PANEL", "TODOS LOS PRODUCTOS", "LISTA DE PEDIDOS"]
+const rutas = [
+  {
+    title: "PANEL",
+    path: "/admin",
+  },
+  {
+    title: "TODOS LOS PRODUCTOS",
+    path: "/admin/productos",
+  },
+  {
+    title: "LISTA DE PEDIDOS",
+    path: "/admin/tabla",
+  },
+]
 const NavbarAdmin = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isAdminOpen, setIsAdminOpen] = useState(false)
+
+  const navigate= useNavigate()
 
   const categories = [
     { name: "Blusas", count: "21" },
@@ -49,6 +67,10 @@ const NavbarAdmin = ({ children }) => {
     setIsAdminOpen(false)
   }
 
+  const navigateTo = (path) => {
+    navigate(path)
+  }
+
   return (
     <>
       {/* Sidebar */}
@@ -65,12 +87,13 @@ const NavbarAdmin = ({ children }) => {
 
         {/* Menú principal */}
         <div className="p-6 space-y-1">
-          {["PANEL", "TODOS LOS PRODUCTOS", "LISTA DE PEDIDOS"].map((item, idx) => (
+          {rutas.map((item, idx) => (
             <div
               key={idx}
               className="py-2 px-3 text-black hover:bg-black hover:text-white rounded cursor-pointer transition-colors"
+              onClick={() => navigateTo(item.path)}
             >
-              <span className="font-medium text-sm">{item}</span>
+              <span className="font-medium text-sm">{item.title}</span>
             </div>
           ))}
         </div>

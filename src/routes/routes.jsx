@@ -17,24 +17,27 @@ export function MisRutas() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ClientLayout/>} >
-          <Route path="checkout" element={<Checkout/>} />
+        <Route path="/" element={<ClientLayout />}>
+          <Route path="checkout" element={<Checkout />} />
           {/* Rutas anidadas dentro del ClientLayout */}
-          <Route path="/" element={<Inicio/>} />
-          <Route path="/catalogo" element={<Catalogo/>}/>
-          <Route path="/detalleproducto" element={<DetalleProducto />}/>
-
-          
+          <Route path="/" element={<Inicio />} />
+          <Route path="/catalogo" element={<Catalogo />} />
+          <Route path="/detalleproducto" element={<DetalleProducto />} />
         </Route>
+
+        <Route path="/login" element={<LoginRegistrar />} />
+
         <Route path="/admin" element={<AdminLayout />}>
           {/* Rutas anidadas dentro del AdminLayout */}
+          <Route path="" element={<Dashboard />} />
           <Route path="productos" element={<Productos />} />
-          <Route path="login" element={<LoginRegistrar/>} />
-          <Route path="/admin/inicio" element={<Dashboard />} /> 
-          <Route path="/admin/actualizarproducto" element={<ActualizarProducto />} />
-          <Route path="/admin/insertarproducto" element={<Insertar />} />
-          <Route path="/admin/detalle" element={<DetallesPedido/>}/>
-          <Route path="/admin/tabla" element={<TablaProductos />}/>
+          <Route
+            path="actualizarproducto"
+            element={<ActualizarProducto />}
+          />
+          <Route path="insertarproducto" element={<Insertar />} />
+          <Route path="detalle/:id" element={<DetallesPedido />} />
+          <Route path="tabla" element={<TablaProductos />} />
           {/* Otras rutas de admin */}
         </Route>
       </Routes>

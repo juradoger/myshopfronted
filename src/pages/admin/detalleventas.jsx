@@ -1,47 +1,25 @@
-import { useState, useEffect } from "react"
-import { MapPin, Download, ExternalLink } from "lucide-react"
+import { useState, useEffect } from "react";
+import { MapPin, Download, ExternalLink } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { pedidos } from "../../data/pedidos";
 
 export default function DetallesPedido() {
-  const [productos, setProductos] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [pedido, setPedido] = useState({
-    id: "42743",
-    fecha: "Feb 10, 2022 - Feb 25, 2022",
-    estado: "Enviado",
-    cliente: {
-      nombre: "Juan Pérez",
-      email: "juanperez@gmail.com",
-      telefono: "+51 992 231 1212",
-    },
-    envio: {
-      metodo: "Pedidos express",
-      pago: "PayPal",
-      direccion: "Clorinda Matto, Pardo Viejo, Surquillo, Lima, Perú",
-    },
-    pago: {
-      tarjeta: "** ** ** 6342",
-      titular: "Juana Pérez",
-      telefono: "+51 992 231 1212",
-    },
-    resumen: {
-      subtotal: 3201.6,
-      impuesto: 640.32,
-      descuento: 0,
-      envio: 0,
-      total: 3841.92,
-    },
-  })
+  const params = useParams();
+
+  const [productos, setProductos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [pedido, setPedido] = useState(pedidos.find((p) => p.id === params.id));
 
   useEffect(() => {
-    fetchProductos()
-  }, [])
+    fetchProductos();
+  }, []);
 
   const fetchProductos = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       // Usando la API de FakeStore como ejemplo
-      const response = await fetch("https://fakestoreapi.com/products?limit=4")
-      const data = await response.json()
+      const response = await fetch("https://fakestoreapi.com/products?limit=4");
+      const data = await response.json();
 
       // Adaptando los datos al formato que necesitamos
       const productosFormateados = data.map((item) => ({
@@ -50,15 +28,14 @@ export default function DetallesPedido() {
         cantidad: 2,
         precio: (item.price * 40).toFixed(2), // Multiplicando para que coincida con los valores del diseño
       }));
-      
+
       setProductos(productosFormateados);
-      
     } catch (error) {
-      console.error("Error al obtener productos:", error)
+      console.error("Error al obtener productos:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen p-6">
@@ -76,7 +53,9 @@ export default function DetallesPedido() {
             <span className="mx-2">/</span>
             <span className="text-gray-700">Detalles del pedido</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-800">Detalles de pedidos</h1>
+          <h1 className="text-2xl font-bold text-gray-800">
+            Detalles de pedidos
+          </h1>
         </div>
 
         {/* Contenido principal */}
@@ -136,7 +115,9 @@ export default function DetallesPedido() {
                 <h3 className="font-semibold">Cliente</h3>
               </div>
               <div className="space-y-1 text-sm">
-                <p className="font-medium">Nombre completo: {pedido.cliente.nombre}</p>
+                <p className="font-medium">
+                  Nombre completo: {pedido.cliente.nombre}
+                </p>
                 <p>Email: {pedido.cliente.email}</p>
                 <p>Teléfono: {pedido.cliente.telefono}</p>
               </div>
@@ -230,7 +211,10 @@ export default function DetallesPedido() {
                 <thead>
                   <tr className="text-left text-xs text-gray-500">
                     <th className="py-3 pl-4 pr-3 w-12">
-                      <input type="checkbox" className="rounded border-gray-300" />
+                      <input
+                        type="checkbox"
+                        className="rounded border-gray-300"
+                      />
                     </th>
                     <th className="py-3 px-3">Nombre del producto</th>
                     <th className="py-3 px-3">ID de pedido</th>
@@ -249,12 +233,23 @@ export default function DetallesPedido() {
                     productos.map((producto, index) => (
                       <tr key={index} className="text-sm">
                         <td className="py-4 pl-4 pr-3">
-                          <input type="checkbox" className="rounded border-gray-300" />
+                          <input
+                            type="checkbox"
+                            className="rounded border-gray-300"
+                          />
                         </td>
-                        <td className="py-4 px-3 font-medium">{producto.nombre}</td>
-                        <td className="py-4 px-3 text-gray-500">{producto.id}</td>
-                        <td className="py-4 px-3 text-center">{producto.cantidad}</td>
-                        <td className="py-4 px-3 text-right">Bs. {producto.precio}</td>
+                        <td className="py-4 px-3 font-medium">
+                          {producto.nombre}
+                        </td>
+                        <td className="py-4 px-3 text-gray-500">
+                          {producto.id}
+                        </td>
+                        <td className="py-4 px-3 text-center">
+                          {producto.cantidad}
+                        </td>
+                        <td className="py-4 px-3 text-right">
+                          Bs. {producto.precio}
+                        </td>
                       </tr>
                     ))
                   )}
@@ -293,5 +288,5 @@ export default function DetallesPedido() {
         </div>
       </div>
     </div>
-  )
+  );
 }
