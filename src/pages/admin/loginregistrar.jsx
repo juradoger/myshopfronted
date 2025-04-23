@@ -1,6 +1,7 @@
 import { HeartCrack, HeartIcon } from "lucide-react"
 import { useState } from "react"
 import { FaGoogle, FaApple, FaFacebook } from "react-icons/fa"
+import { useNavigate } from "react-router-dom"
 
 
 const LoginRegistrar = () => {
@@ -13,6 +14,8 @@ const LoginRegistrar = () => {
   const [aceptarTerminos, setAceptarTerminos] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
+  const navigate = useNavigate()
+
   // Función para cambiar entre modales
   const toggleModal = () => {
     setShowLogin(!showLogin)
@@ -23,7 +26,7 @@ const LoginRegistrar = () => {
     e.preventDefault()
     console.log("Login con:", { email, password, mantenerConectado })
     // Simulamos login exitoso
-    setIsLoggedIn(true)
+    navigate("/admin")
   }
 
   // Función para manejar el registro

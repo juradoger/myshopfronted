@@ -44,7 +44,7 @@ export default function Inicio() {
       </div>
 
       {/* Comprar por categoría */}
-      <div className="container mx-auto py-12 px-4">
+      <div className="py-12 px-4">
         <h2 className="text-2xl font-medium text-center mb-8">Comprar por categoría</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {homeImages.categories.map((category, index) => (
@@ -63,7 +63,7 @@ export default function Inicio() {
       </div>
 
       {/* Categorías Populares */}
-      <div className="container mx-auto py-8 px-4 mb-12">
+      <div className="py-8 px-4 mb-12">
         <h2 className="text-xl font-medium mb-6">Categorías Populares</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {homeImages.popular.map((category, index) => (

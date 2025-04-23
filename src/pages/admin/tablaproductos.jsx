@@ -1,101 +1,15 @@
-import { useState } from "react"
-import { MoreVertical } from "lucide-react"
+import { useState } from "react";
+import { MoreVertical } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { pedidos as pedidosDB } from "../../data/pedidos";
 
 const TablaProductos = () => {
- 
-  const [pedidos, setPedidos] = useState([
-    {
-      id: "#25426",
-      producto: "Lorem Ipsum",
-      fecha: "Nov 8th, 2023",
-      cliente: {
-        nombre: "Kavin",
-        avatar: "https://randomuser.me/api/portraits/men/11.jpg",
-      },
-      estado: "Entregado",
-      cantidad: "Rs. 200.00",
-    },
-    {
-      id: "#25425",
-      producto: "Lorem Ipsum",
-      fecha: "Nov 7th, 2023",
-      cliente: {
-        nombre: "Komaël",
-        avatar: "https://randomuser.me/api/portraits/men/12.jpg",
-      },
-      estado: "Cancelado",
-      cantidad: "Rs. 200.00",
-    },
-    {
-      id: "#25424",
-      producto: "Lorem Ipsum",
-      fecha: "Nov 6th, 2023",
-      cliente: {
-        nombre: "Nikhil",
-        avatar: "https://randomuser.me/api/portraits/men/13.jpg",
-      },
-      estado: "Entregado",
-      cantidad: "Rs. 200.00",
-    },
-    {
-      id: "#25423",
-      producto: "Lorem Ipsum",
-      fecha: "Nov 5th, 2023",
-      cliente: {
-        nombre: "Shivam",
-        avatar: "https://randomuser.me/api/portraits/men/14.jpg",
-      },
-      estado: "Cancelado",
-      cantidad: "Rs. 200.00",
-    },
-    {
-      id: "#25422",
-      producto: "Lorem Ipsum",
-      fecha: "Nov 4th, 2023",
-      cliente: {
-        nombre: "Shadab",
-        avatar: "https://randomuser.me/api/portraits/men/15.jpg",
-      },
-      estado: "Entregado",
-      cantidad: "Rs. 200.00",
-    },
-    {
-      id: "#25421",
-      producto: "Lorem Ipsum",
-      fecha: "Nov 2nd, 2023",
-      cliente: {
-        nombre: "Yogesh",
-        avatar: "https://randomuser.me/api/portraits/men/16.jpg",
-      },
-      estado: "Entregado",
-      cantidad: "Rs. 200.00",
-    },
-    {
-      id: "#25423",
-      producto: "Lorem Ipsum",
-      fecha: "Nov 1st, 2023",
-      cliente: {
-        nombre: "Sunita",
-        avatar: "https://randomuser.me/api/portraits/women/11.jpg",
-      },
-      estado: "Cancelado",
-      cantidad: "Rs. 200.00",
-    },
-    {
-      id: "#25421",
-      producto: "Lorem Ipsum",
-      fecha: "Nov 1st, 2023",
-      cliente: {
-        nombre: "Priyanka",
-        avatar: "https://randomuser.me/api/portraits/women/12.jpg",
-      },
-      estado: "Entregado",
-      cantidad: "Rs. 200.00",
-    },
-  ])
+  const [pedidos, setPedidos] = useState(pedidosDB);
 
-  const startDate = "Feb 16, 2022"
-  const endDate = "Feb 20, 2022"
+  const navigate = useNavigate();
+
+  const startDate = "Feb 16, 2022";
+  const endDate = "Feb 20, 2022";
 
   return (
     <div className="bg-gray-100">
@@ -124,7 +38,14 @@ const TablaProductos = () => {
                     strokeLinejoin="round"
                     className="mr-1"
                   >
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <rect
+                      x="3"
+                      y="4"
+                      width="18"
+                      height="18"
+                      rx="2"
+                      ry="2"
+                    ></rect>
                     <line x1="16" y1="2" x2="16" y2="6"></line>
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
@@ -154,7 +75,6 @@ const TablaProductos = () => {
           </div>
         </div>
 
-       
         <div className="px-4 pb-4 mt-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-medium text-sm">Compras recientes</h2>
@@ -163,13 +83,15 @@ const TablaProductos = () => {
             </button>
           </div>
 
-        
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="text-xs text-gray-600">
                   <th className="py-3 pr-4 text-left w-12">
-                    <input type="checkbox" className="rounded border-gray-300" />
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300"
+                    />
                   </th>
                   <th className="py-3 px-4 text-left">Producto</th>
                   <th className="py-3 px-4 text-left">ID de pedido</th>
@@ -183,10 +105,18 @@ const TablaProductos = () => {
                 {pedidos.map((pedido, index) => (
                   <tr key={index} className="text-xs">
                     <td className="py-3 pr-4">
-                      <input type="checkbox" className="rounded border-gray-300" />
+                      <input
+                        type="checkbox"
+                        className="rounded border-gray-300"
+                      />
                     </td>
                     <td className="py-3 px-4">{pedido.producto}</td>
-                    <td className="py-3 px-4">{pedido.id}</td>
+                    <td
+                      className="py-3 px-4"
+                      onClick={() => navigate(`/admin/detalle/${pedido.id}`)}
+                    >
+                      #{pedido.id}
+                    </td>
                     <td className="py-3 px-4">{pedido.fecha}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
@@ -202,7 +132,9 @@ const TablaProductos = () => {
                       <div className="flex items-center">
                         <span
                           className={`w-1.5 h-1.5 rounded-full mr-2 ${
-                            pedido.estado === "Entregado" ? "bg-blue-500" : "bg-orange-500"
+                            pedido.estado === "Entregado"
+                              ? "bg-blue-500"
+                              : "bg-orange-500"
                           }`}
                         ></span>
                         <span>{pedido.estado}</span>
@@ -219,11 +151,21 @@ const TablaProductos = () => {
               <button className="w-6 h-6 flex items-center justify-center rounded bg-black text-white text-xs">
                 1
               </button>
-              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-xs">2</button>
-              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-xs">3</button>
-              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-xs">4</button>
-              <span className="w-6 h-6 flex items-center justify-center text-xs">...</span>
-              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-xs">10</button>
+              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-xs">
+                2
+              </button>
+              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-xs">
+                3
+              </button>
+              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-xs">
+                4
+              </button>
+              <span className="w-6 h-6 flex items-center justify-center text-xs">
+                ...
+              </span>
+              <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-xs">
+                10
+              </button>
               <button className="px-2 h-6 flex items-center justify-center rounded border border-gray-200 text-xs ml-1">
                 NEXT
               </button>
@@ -232,7 +174,7 @@ const TablaProductos = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TablaProductos
+export default TablaProductos;

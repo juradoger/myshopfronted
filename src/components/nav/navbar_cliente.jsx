@@ -49,7 +49,7 @@ const NavbarCliente = ({children}) => {
     "Moda",
   ]
 
-  const filterCategories = {
+  const  filterCategories = {
     categories: [
       { name: "Ropa - Para todos los géneros", checked: false },
       { name: "Artículos, Weekenders & Complementos", checked: false },
@@ -174,7 +174,7 @@ const NavbarCliente = ({children}) => {
       </div>
 
       {/* Product Filters - Sidebar */}
-      <div className="flex flex-col md:flex-row p-4">
+      <div className="flex flex-col md:flex-row p-4 flex-1">
         <div className="w-full md:w-1/4 p-6">
           {/* Categorías */}
           <div className="mb-6">
