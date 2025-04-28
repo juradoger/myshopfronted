@@ -17,7 +17,7 @@ export default function DetalleProducto() {
   const { setIsCartOpen } = useAppStore();
 
   const productId = Number(params?.id);
-
+  console.log('ID del producto:', productId);
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -98,9 +98,9 @@ export default function DetalleProducto() {
             </div>
             <h1 className='text-xl font-medium mb-1'>{product.title}</h1>
             <div className='flex items-center mb-4'>
-              <span className='text-lg font-medium mr-2'>${product.price}</span>
+              <span className='text-lg font-medium mr-2'>Bs. {product.price}</span>
               <span className='text-gray-500 line-through'>
-                ${originalPrice.toFixed(2)}
+                Bs. {originalPrice.toFixed(2)}
               </span>
             </div>
 
@@ -296,7 +296,7 @@ export default function DetalleProducto() {
               />
             </div>
             <h3 className='text-xs text-gray-700'>The ReNew Fleece Crew</h3>
-            <p className='text-xs font-medium mt-1'>$69</p>
+            <p className='text-xs font-medium mt-1'>Bs. 69</p>
           </div>
 
           <div className='group cursor-pointer'>
@@ -308,7 +308,7 @@ export default function DetalleProducto() {
               />
             </div>
             <h3 className='text-xs text-gray-700'>The Utility Cargo Jacket</h3>
-            <p className='text-xs font-medium mt-1'>$98</p>
+            <p className='text-xs font-medium mt-1'>Bs. 98</p>
           </div>
 
           <div className='group cursor-pointer'>
@@ -322,7 +322,7 @@ export default function DetalleProducto() {
             <h3 className='text-xs text-gray-700'>
               The ReNew Long Sleeve Crew
             </h3>
-            <p className='text-xs font-medium mt-1'>$65</p>
+            <p className='text-xs font-medium mt-1'>Bs. 65</p>
           </div>
 
           <div className='group cursor-pointer'>
@@ -334,7 +334,7 @@ export default function DetalleProducto() {
               />
             </div>
             <h3 className='text-xs text-gray-700'>The ReNew Half-Zip Fleece</h3>
-            <p className='text-xs font-medium mt-1'>$85</p>
+            <p className='text-xs font-medium mt-1'>Bs. 85</p>
           </div>
         </div>
       </div>
@@ -345,7 +345,7 @@ export default function DetalleProducto() {
         <div className='bg-gray-50 p-6 rounded-lg mb-8'>
           <div className='flex flex-col md:flex-row gap-8'>
             <div className='md:w-1/3'>
-              <div className='text-sm font-medium mb-2'>5.0 Overall Rating</div>
+              <div className='text-sm font-medium mb-2'>5.0 Rating</div>
               <div className='flex items-center mb-4'>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <svg
@@ -387,11 +387,11 @@ export default function DetalleProducto() {
 
             <div className='md:w-1/3'>
               <div className='text-sm font-medium mb-2'>
-                Runs slightly large
+                Runs slightly large pantalones
               </div>
               <div className='flex items-center justify-between text-xs text-gray-500'>
-                <span>Runs small</span>
-                <span>Runs large</span>
+                <span>Cortos</span>
+                <span>Largos</span>
               </div>
               <div className='w-full bg-gray-200 h-2 my-1 rounded-full overflow-hidden'>
                 <div
@@ -419,7 +419,7 @@ export default function DetalleProducto() {
           <div className='border-t pt-6'>
             <div className='flex justify-between items-start mb-2'>
               <div>
-                <div className='font-medium'>Elizabeth/Robyn</div>
+                <div className='font-medium'>Elizabeth Ortega</div>
                 <div className='flex items-center'>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
@@ -433,7 +433,7 @@ export default function DetalleProducto() {
                   ))}
                 </div>
               </div>
-              <div className='text-xs text-gray-500'>14 días ago</div>
+              <div className='text-xs text-gray-500'>Hace 14 dias</div>
             </div>
             <p className='text-sm mb-4'>Muy comodo y bueno</p>
           </div>
@@ -441,7 +441,7 @@ export default function DetalleProducto() {
           <div className='border-t pt-6'>
             <div className='flex justify-between items-start mb-2'>
               <div>
-                <div className='font-medium'>Anonymous</div>
+                <div className='font-medium'>Anónimo</div>
                 <div className='flex items-center'>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
@@ -455,7 +455,7 @@ export default function DetalleProducto() {
                   ))}
                 </div>
               </div>
-              <div className='text-xs text-gray-500'>14 días ago</div>
+              <div className='text-xs text-gray-500'>Hace 14 dias</div>
             </div>
             <p className='text-sm mb-4'>
               Me queda perfecto y es muy comodo, lo recomiendo

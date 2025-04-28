@@ -36,7 +36,7 @@ export default function Catalogo() {
       <div className='flex flex-col md:flex-row gap-8'>
         <div className='flex-1'>
           <div className='flex items-center justify-between mb-6'>
-            <h1 className='text-xl font-bold'>Ropa y accesorios: novedades</h1>
+            <h1 className='text-xl font-medium'>ROPA: NOVEDADES</h1>
             <span className='text-sm text-gray-500'>
               {products.length} Productos
             </span>
@@ -54,51 +54,51 @@ export default function Catalogo() {
                 );
                 return (
                   <div key={product.id} className='group'>
-                    <div className='relative mb-2'>
-                      <div className='absolute top-2 left-2 bg-white px-2 py-1 text-xs font-medium text-red-600'>
-                        {product.salesPercentage}% off
-                      </div>
-                      <img
-                        src={product.image || '/placeholder.svg'}
-                        alt={product.title}
-                        className='w-full h-[400px] object-cover bg-gray-100'
-                        onClick={() =>
-                          navigate(`/detalleproducto/${product.id}`)
-                        }
-                      />
+                  <div className='relative mb-2'>
+                    <div className='absolute top-2 left-2 bg-white px-2 py-1 text-xs font-medium text-red-600'>
+                    {product.salesPercentage}% off
                     </div>
-                    <h3 className='text-sm font-medium'>{product.title}</h3>
-                    <div className='mt-1 flex items-center justify-between'>
-                      <p className='text-sm font-medium'>
-                        Ahora ${product.price}
-                      </p>
-                      <p className='text-sm text-gray-500 line-through'>
-                        ${originalPrice}
-                      </p>
-                    </div>
-                    <div className='mt-2 flex gap-1'>
-                      <button className='h-4 w-4 rounded-full bg-black'></button>
-                      {product.color === 'black' && (
-                        <button className='h-4 w-4 rounded-full bg-black'></button>
-                      )}
-                      {product.color === 'blue' && (
-                        <button className='h-4 w-4 rounded-full bg-blue-600'></button>
-                      )}
-                      {product.color === 'red' && (
-                        <button className='h-4 w-4 rounded-full bg-red-600'></button>
-                      )}
-                      <button className='h-4 w-4 rounded-full bg-amber-700'></button>
-                      <button className='h-4 w-4 rounded-full bg-gray-700'></button>
-                    </div>
-                    {product.category === "men's clothing" ? (
-                      <p className='mt-1 text-xs text-gray-500'>
-                        MATERIAL RECICLADO • HECHO EN ESPAÑA
-                      </p>
-                    ) : (
-                      <p className='mt-1 text-xs text-gray-500'>
-                        + COLORES VARIADOS
-                      </p>
+                    <img
+                    src={product.image || '/placeholder.svg'}
+                    alt={product.title}
+                    className='w-full h-[400px] object-cover bg-gray-100'
+                    onClick={() =>
+                      navigate(`/detalleproducto/${product.id}`) // Aquí se está pasando el id
+                    }
+                    />
+                  </div>
+                  <h3 className='text-sm font-medium'>{product.title}</h3>
+                  <div className='mt-1 flex items-center justify-between'>
+                    <p className='text-sm font-medium'>
+                    Ahora Bs. {product.price}
+                    </p>
+                    <p className='text-sm text-gray-500 line-through'>
+                    Bs. {originalPrice}
+                    </p>
+                  </div>
+                  <div className='mt-2 flex gap-1'>
+                    <button className='h-4 w-4 rounded-full bg-black'></button>
+                    {product.color === 'black' && (
+                    <button className='h-4 w-4 rounded-full bg-black'></button>
                     )}
+                    {product.color === 'blue' && (
+                    <button className='h-4 w-4 rounded-full bg-blue-600'></button>
+                    )}
+                    {product.color === 'red' && (
+                    <button className='h-4 w-4 rounded-full bg-red-600'></button>
+                    )}
+                    <button className='h-4 w-4 rounded-full bg-amber-700'></button>
+                    <button className='h-4 w-4 rounded-full bg-gray-700'></button>
+                  </div>
+                  {product.category === "men's clothing" ? (
+                    <p className='mt-1 text-xs text-gray-500'>
+                    MATERIAL RECICLADO • HECHO EN BOLIVIA
+                    </p>
+                  ) : (
+                    <p className='mt-1 text-xs text-gray-500'>
+                    + COLORES VARIADOS
+                    </p>
+                  )}
                   </div>
                 );
               })}

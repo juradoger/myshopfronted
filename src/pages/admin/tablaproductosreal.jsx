@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, MoreVertical } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { FaPlus } from 'react-icons/fa';
 
 export const productos = [
   {
@@ -13,10 +14,10 @@ export const productos = [
     stock: 45,
     regularPrice: 29.99,
     salePrice: 24.99,
-    tags: ['algodón', 'oversize', 'ecológico'],
+    tags: ['M', 'XL', 'SM'],
     colors: ['#000000', '#FFFFFF', '#808080'],
     images: [
-      'https://loremflickr.com/320/240/t-shirt',
+      'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1036&q=80',
       'https://loremflickr.com/320/240/oversize',
       'https://loremflickr.com/320/240/white-shirt',
     ],
@@ -31,10 +32,10 @@ export const productos = [
     stock: 20,
     regularPrice: 89.99,
     salePrice: 69.99,
-    tags: ['urbano', 'casual', 'confort'],
+    tags: ['M', 'XL', 'L'],
     colors: ['#1e3a8a', '#e11d48'],
     images: [
-      'https://loremflickr.com/320/240/sneakers',
+      'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1036&q=80',
       'https://loremflickr.com/320/240/urban-shoes',
     ],
   },
@@ -48,10 +49,10 @@ export const productos = [
     stock: 75,
     regularPrice: 59.99,
     salePrice: 49.99,
-    tags: ['viajes', 'seguridad', 'resistente al agua'],
+    tags: ['M', 'S', 'P'],
     colors: ['#4b5563', '#111827'],
     images: [
-      'https://loremflickr.com/320/240/backpack',
+      'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1036&q=80',
       'https://loremflickr.com/320/240/anti-theft-bag',
     ],
   },
@@ -65,10 +66,10 @@ export const productos = [
     stock: 100,
     regularPrice: 39.99,
     salePrice: 29.99,
-    tags: ['verano', 'polarizadas', 'protección solar'],
+    tags: ['S', 'P', 'SP'],
     colors: ['#000000', '#facc15'],
     images: [
-      'https://loremflickr.com/320/240/sunglasses',
+      'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1036&q=80',
       'https://loremflickr.com/320/240/polarized-glasses',
     ],
   },
@@ -140,6 +141,7 @@ const TablaProductosReal = () => {
               />
               <span>Lista de Productos</span>
             </div>
+
             <div className='flex items-center gap-4'>
               <div className='flex items-center gap-2'>
                 <div className='text-xs text-gray-600 flex items-center'>
@@ -185,9 +187,9 @@ const TablaProductosReal = () => {
 
               {/* Select con la flechita */}
               <select className='border border-gray-300 rounded px-3 py-1 pr-8 text-sm bg-white appearance-none pl-8'>
-                <option>Recientes</option>
-                <option>Hace un mes</option>
-                <option>Hace un año</option>
+                <option>Hombre</option>
+                <option>Mujer</option>
+                <option>Niño / Niña</option>
               </select>
 
               {/* Flechita al lado derecho del select */}
@@ -209,7 +211,10 @@ const TablaProductosReal = () => {
               </div>
             </div>
           </div>
-
+          <button className="bg-black text-white px-4 py-2 rounded-md flex justify-between items-center gap-2 mb-6 my-4" onClick={() => navigate("/admin/insertarproducto")}>
+            <FaPlus size={14} />
+            <span>AÑADIR NUEVO PRODUCTO</span>
+          </button>
           <div className='overflow-x-auto'>
             <table className='w-full'>
               <thead>
@@ -221,9 +226,9 @@ const TablaProductosReal = () => {
                   <th className='py-3 px-4 text-left'>Marca</th>
                   <th className='py-3 px-4 text-left'>SKU</th>
                   <th className='py-3 px-4 text-left'>Stock</th>
-                  <th className='py-3 px-4 text-left'>Precio Regular</th>
-                  <th className='py-3 px-4 text-left'>Precio Oferta</th>
-                  <th className='py-3 px-4 text-left'>Tags</th>
+                  <th className='py-3 px-4 text-left'>Precio Unitario</th>
+                  <th className='py-3 px-4 text-left'>Precio Mayor</th>
+                  <th className='py-3 px-4 text-left'>Tallas</th>
                   <th className='py-3 px-4 text-left'>Colores</th>
                   <th className='py-3 px-4 text-left'></th>
                 </tr>

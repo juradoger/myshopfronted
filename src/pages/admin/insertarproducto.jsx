@@ -81,15 +81,17 @@ export default function Insertar() {
   };
 
   return (
+    
     <div className='mx-10 bg-gray-100 min-h-screen p-6'>
-      {/* Title and breadcrumb */}
-      <h2 className='text-xl font-medium mb-2'>AÑADIR NUEVO PRODUCTO</h2>
-      <p className='flex text-sm text-gray-600 mb-6 '>
-        Inicio <ChevronRight size={16} className='mx-2 my-0.5' /> Productos{' '}
-        <ChevronRight size={16} className='mx-2 my-0.5' /> Añadir nuevo producto
-      </p>
-
-      {/* Main form */}
+        <h2 className='text-xl font-medium mb-2'>
+          {editProduct ? 'EDITAR PRODUCTO' : 'AÑADIR NUEVO PRODUCTO'}
+        </h2>
+        <p className='flex text-sm text-gray-600 mb-6 '>
+          Inicio <ChevronRight size={16} className='mx-2 my-0.5' /> Productos{' '}
+          <ChevronRight size={16} className='mx-2 my-0.5' />{' '}
+          {editProduct ? 'Editar producto' : 'Añadir nuevo producto'}
+        </p>
+        {/* Main form */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
         {/* Left Column - Form Fields */}
         <div className='md:col-span-2 space-y-6'>
