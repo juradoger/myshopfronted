@@ -51,10 +51,10 @@ export default function DetallesPedido() {
               Lista de pedidos
             </a>
             <span className="mx-2">/</span>
-            <span className="text-gray-700">Detalles del pedido</span>
+            <span className="text-gray-700">Detalles del Pedido</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-800">
-            Detalles de pedidos
+            DETALLES DEL PEDIDO {`#${pedido.id}`}
           </h1>
         </div>
 
@@ -63,63 +63,81 @@ export default function DetallesPedido() {
           {/* Cabecera del pedido */}
           <div className="flex flex-wrap items-center justify-between mb-6 pb-4 border-b border-gray-200">
             <div className="flex items-center">
-              <div>
-                <p className="text-gray-500 text-sm">ID de pedido:</p>
-                <p className="font-semibold text-gray-800">{pedido.id}</p>
-              </div>
-              <span className="ml-3 px-3 py-1 bg-orange-100 text-orange-600 text-xs font-medium rounded-full">
+              <div className="flex justify-between">
+                <p className="text-gray-500 text-sm">Estado:</p>
+                <span className="ml-3 px-3 py-1 bg-orange-100 text-orange-600 text-xs font-medium rounded-full">
                 {pedido.estado}
-              </span>
+                </span>
+              </div>
             </div>
             <div className="flex items-center text-sm text-gray-500">
               <span>{pedido.fecha}</span>
-              <div className="ml-4 flex space-x-2">
-                <select className="border border-gray-300 rounded px-3 py-1 text-sm bg-white">
-                  <option>Cambiar estado</option>
-                  <option>Pendiente</option>
-                  <option>Enviado</option>
-                  <option>Entregado</option>
-                  <option>Cancelado</option>
-                </select>
-                <button className="p-1 border border-gray-300 rounded">
+              <div className="ml-4 flex space-x-1 gap-1 px-4">
+                <div className="relative inline-block">
+                  <select className="border border-gray-300 rounded px-3 py-1 pr-8 text-sm bg-white appearance-none">
+                    <option>Cambiar estado</option>
+                    <option>Pendiente</option>
+                    <option>Enviado</option>
+                    <option>Entregado</option>
+                    <option>Cancelado</option>
+                  </select>
+
+                  <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-gray-500"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <button className="p-2 border border-gray-300 rounded">
                   <ExternalLink size={16} />
                 </button>
-                <button className="p-1 border border-gray-300 rounded">
+                <button className="p-2 border border-gray-300 rounded">
                   <Download size={16} />
                 </button>
               </div>
             </div>
           </div>
-
           {/* Información del cliente, pedido y entrega */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
             {/* Cliente */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center mb-3">
-                <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center mr-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
+            <div className="bg-gray-50 rounded-lg p-4 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center mb-3">
+                  <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center mr-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="font-semibold">Cliente</h3>
                 </div>
-                <h3 className="font-semibold">Cliente</h3>
-              </div>
-              <div className="space-y-1 text-sm">
-                <p className="font-medium">
-                  Nombre completo: {pedido.cliente.nombre}
-                </p>
-                <p>Email: {pedido.cliente.email}</p>
-                <p>Teléfono: {pedido.cliente.telefono}</p>
+                <div className="space-y-1 text-sm">
+                  <p className="font-normal">Nombre completo: {pedido.cliente.nombre}</p>
+                  <p>Email: {pedido.cliente.email}</p>
+                  <p>Teléfono: {pedido.cliente.telefono}</p>
+                </div>
               </div>
               <button className="mt-4 w-full py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700 transition">
                 Ver perfil
@@ -127,29 +145,31 @@ export default function DetallesPedido() {
             </div>
 
             {/* Información del pedido */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center mb-3">
-                <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center mr-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                    />
-                  </svg>
+            <div className="bg-gray-50 rounded-lg p-4 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center mb-3">
+                  <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center mr-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="font-semibold">Información del Pedido</h3>
                 </div>
-                <h3 className="font-semibold">Información del pedido</h3>
-              </div>
-              <div className="space-y-1 text-sm">
-                <p>Envío: {pedido.envio.metodo}</p>
-                <p>Método de pago: {pedido.envio.pago}</p>
+                <div className="space-y-1 text-sm">
+                  <p>Envío: {pedido.envio.metodo}</p>
+                  <p>Método de pago: {pedido.envio.pago}</p>
+                </div>
               </div>
               <button className="mt-4 w-full py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700 transition">
                 Descargar información
@@ -157,69 +177,73 @@ export default function DetallesPedido() {
             </div>
 
             {/* Entregar a */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex items-center mb-3">
-                <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center mr-2">
-                  <MapPin className="h-4 w-4 text-white" />
+            <div className="bg-gray-50 rounded-lg p-4 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center mb-3">
+                  <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center mr-2">
+                    <MapPin className="h-4 w-4 text-white" />
+                  </div>
+                  <h3 className="font-semibold">Ubicación</h3>
                 </div>
-                <h3 className="font-semibold">Entregar a</h3>
-              </div>
-              <div className="space-y-1 text-sm">
-                <p>Dirección: {pedido.envio.direccion}</p>
+                <div className="space-y-1 text-sm">
+                  <p>Dirección: {pedido.envio.direccion}</p>
+                </div>
               </div>
               <button className="mt-4 w-full py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700 transition">
                 Ver mapa
               </button>
             </div>
-          </div>
 
+          </div>
           {/* Información de pago y notas */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
             {/* Información de pago */}
-            <div>
-              <h3 className="font-semibold mb-3">Información de pago</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center">
-                  <div className="w-8 h-5 bg-red-500 rounded mr-2"></div>
-                  <p>Método: Tarjeta {pedido.pago.tarjeta}</p>
+            <div className="flex flex-col justify-between p-4 border rounded-lg bg-gray-50">
+              <div>
+                <h3 className="font-semibold mb-3">Información de pago</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center">
+                    <p>Método: Tarjeta {pedido.pago.tarjeta}</p>
+                  </div>
+                  <p>Titular de la tarjeta: {pedido.pago.titular}</p>
+                  <p>Teléfono: {pedido.pago.telefono}</p>
                 </div>
-                <p>Titular de la tarjeta: {pedido.pago.titular}</p>
-                <p>Teléfono: {pedido.pago.telefono}</p>
               </div>
             </div>
 
             {/* Nota */}
-            <div>
-              <h3 className="font-semibold mb-3">Nota</h3>
-              <textarea
-                className="w-full p-3 border border-gray-300 rounded-md text-sm"
-                rows="3"
-                placeholder="Escribe alguna nota..."
-              ></textarea>
+            <div className="flex flex-col justify-between p-4 border rounded-lg bg-gray-50">
+              <div>
+                <h3 className="font-semibold mb-3">Nota</h3>
+                <textarea
+                  className="w-full h-[150px] p-3 border border-gray-300 rounded-md text-sm resize-none"
+                  placeholder="Escribe alguna nota..."
+                ></textarea>
+              </div>
             </div>
+
           </div>
+
 
           {/* Tabla de productos */}
           <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex flex-col mb-4 text-center">
               <h3 className="font-semibold">Productos</h3>
-              <span className="text-gray-500">{productos.length}</span>
-            </div>
 
+              <div className="flex items-center gap-1 mt-1 text-center">
+                <h6 className="font-extralight text-sm">Cantidad:</h6>
+                <span className="text-gray-500 text-sm">{productos.length}</span>
+              </div>
+            </div>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
-                  <tr className="text-left text-xs text-gray-500">
-                    <th className="py-3 pl-4 pr-3 w-12">
-                      <input
-                        type="checkbox"
-                        className="rounded border-gray-300"
-                      />
-                    </th>
-                    <th className="py-3 px-3">Nombre del producto</th>
-                    <th className="py-3 px-3">ID de pedido</th>
-                    <th className="py-3 px-3 text-center">Cantidad</th>
-                    <th className="py-3 px-3 text-right">Total</th>
+                  <tr className="text-left text-sm text-gray-500">
+                    <th className="py-3 px-3 font-medium">Producto</th>
+                    <th className="py-3 px-3 font-medium">Código</th>
+                    <th className="py-3 px-3 text-center font-medium">Cantidad</th>
+                    <th className="py-3 px-3 text-right font-medium">Total</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
@@ -232,12 +256,6 @@ export default function DetallesPedido() {
                   ) : (
                     productos.map((producto, index) => (
                       <tr key={index} className="text-sm">
-                        <td className="py-4 pl-4 pr-3">
-                          <input
-                            type="checkbox"
-                            className="rounded border-gray-300"
-                          />
-                        </td>
                         <td className="py-4 px-3 font-medium">
                           {producto.nombre}
                         </td>
@@ -263,19 +281,15 @@ export default function DetallesPedido() {
             <div className="w-full md:w-64 ml-auto">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Subtotal</span>
+                  <span>Subtotal </span>
                   <span>Bs. {pedido.resumen.subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Tax (20%)</span>
-                  <span>Bs. {pedido.resumen.impuesto.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Descuento</span>
+                  <span>Descuento (20%) </span>
                   <span>Bs. {pedido.resumen.descuento.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Tasa de envío</span>
+                  <span>Costo de envío </span>
                   <span>Bs. {pedido.resumen.envio.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between font-semibold pt-2 border-t border-gray-200">

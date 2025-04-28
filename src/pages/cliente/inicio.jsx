@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { getCustomImagesForHome } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Inicio() {
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [homeImages, setHomeImages] = useState({
     hero: "",
     categories: [],
@@ -33,19 +35,19 @@ export default function Inicio() {
           className="w-full h-full object-cover"
         />
         <div className="w-full absolute inset-0 flex flex-col justify-center items-start md:px-16 text-white">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Era cómoda</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">El Comfort</h1>
           <p className="text-lg md:text-xl mb-6">
-            Consigue el máximo confort y elegancia con los nuevos básicos de invierno.
+            Consigue el máximo confort y elegancia en MyShop.
           </p>
           <button className="bg-white text-black px-6 py-3 font-medium hover:bg-gray-100 transition">
-            COMPRAR AHORA
+            COMENZAR
           </button>
         </div>
       </div>
 
       {/* Comprar por categoría */}
       <div className="py-12 px-4">
-        <h2 className="text-2xl font-medium text-center mb-8">Comprar por categoría</h2>
+        <h2 className="text-2xl font-medium text-center mb-8">Categorías</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {homeImages.categories.map((category, index) => (
             <div key={index} className="flex flex-col items-center">

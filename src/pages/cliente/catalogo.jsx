@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react"
-import { fetchClothingProducts } from "../../services/api" // Ajusta la ruta según tu estructura de proyecto
+import { fetchClothingProducts } from "../../services/api"
+import { useNavigate } from "react-router-dom"
 
 export default function Catalogo() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const getProducts = async () => {
@@ -60,6 +62,7 @@ export default function Catalogo() {
                         src={product.image || "/placeholder.svg"}
                         alt={product.title}
                         className="w-full h-[400px] object-cover bg-gray-100"
+                        onClick={() => navigate(`/detalleproducto`)}
                       />
                     </div>
                     <h3 className="text-sm font-medium">{product.title}</h3>

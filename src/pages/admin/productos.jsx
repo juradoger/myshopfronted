@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { fetchClothingProducts } from "../../services/api"
+import { useNavigate } from "react-router-dom"
 import { FaPlus } from "react-icons/fa"
 import { ChevronRight } from "lucide-react"
 
@@ -9,7 +10,7 @@ export default function Productos() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [loading, setLoading] = useState(true)
-
+  const navigate = useNavigate()
   useEffect(() => {
     const getProducts = async () => {
       try {
@@ -53,13 +54,14 @@ export default function Productos() {
   return (
     <div className=" px-10 py-6 bg-white">
       <div className="flex justify-between items-center mb-6">
-        <div className="text-xl font-bold">
-          <h1>Todos los productos</h1>
-          <p className="flex text-start text-sm font-light text-gray-500">Inicio <ChevronRight size={14} className=" flex-wrap mx-2 my-1 text-gray-400" /> Todos los productos</p>
+        <div className="text-xl font-">
+          <h1>PRODUCTOS</h1>
+          <p className="flex text-start text-sm font-light text-gray-500">Inicio <ChevronRight size={14} className=" flex-wrap mx-2 my-1 text-gray-400" /> Productos</p>
         </div>
-        <button className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2">
+        <button className="bg-black text-white px-4 py-2 rounded-md flex items-center gap-2" onClick={() => navigate("/admin/insertarproducto")}>
           <FaPlus size={14} />
           <span>AÑADIR NUEVO PRODUCTO</span>
+          
         </button>
       </div>
 
@@ -117,7 +119,7 @@ export default function Productos() {
                     </div>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Productos restantes</span>
+                    <span className="text-sm">Cantidad restante</span>
                     <span className="text-sm">{product.stock}</span>
                   </div>
                 </div>
@@ -130,7 +132,7 @@ export default function Productos() {
               <button
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
-                className="px-3 py-2 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                className="px-2 py-2 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50"
               >
                 <ChevronRight size={16} className="transform rotate-180" />
               </button>
@@ -171,9 +173,9 @@ export default function Productos() {
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 flex items-center gap-1"
+                className="px-2 py-2 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 flex items-center gap-1"
               >
-                NEXT <ChevronRight size={16} />
+             <ChevronRight size={16} />
               </button>
             </nav>
           </div>

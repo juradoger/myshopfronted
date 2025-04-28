@@ -36,7 +36,7 @@ export const pedidos = [
       avatar: "https://randomuser.me/api/portraits/men/12.jpg",
     },
     estado: "Cancelado",
-    cantidad: "Rs. 200.00",
+    cantidad: "Bs. 200.00",
     envio: {
       metodo: "Pedidos express",
       pago: "PayPal",
@@ -64,7 +64,7 @@ export const pedidos = [
       avatar: "https://randomuser.me/api/portraits/men/13.jpg",
     },
     estado: "Entregado",
-    cantidad: "Rs. 200.00",
+    cantidad: "Bs. 200.00",
     envio: {
       metodo: "Pedidos express",
       pago: "PayPal",
@@ -92,7 +92,7 @@ export const pedidos = [
       avatar: "https://randomuser.me/api/portraits/men/14.jpg",
     },
     estado: "Cancelado",
-    cantidad: "Rs. 200.00",
+    cantidad: "Bs. 200.00",
     envio: {
       metodo: "Pedidos express",
       pago: "PayPal",
@@ -120,7 +120,7 @@ export const pedidos = [
       avatar: "https://randomuser.me/api/portraits/men/15.jpg",
     },
     estado: "Entregado",
-    cantidad: "Rs. 200.00",
+    cantidad: "Bs. 200.00",
     envio: {
       metodo: "Pedidos express",
       pago: "PayPal",
@@ -148,7 +148,7 @@ export const pedidos = [
       avatar: "https://randomuser.me/api/portraits/men/16.jpg",
     },
     estado: "Entregado",
-    cantidad: "Rs. 200.00",
+    cantidad: "Bs. 200.00",
     envio: {
       metodo: "Pedidos express",
       pago: "PayPal",
@@ -176,7 +176,7 @@ export const pedidos = [
       avatar: "https://randomuser.me/api/portraits/women/11.jpg",
     },
     estado: "Cancelado",
-    cantidad: "Rs. 200.00",
+    cantidad: "Bs. 200.00",
     envio: {
       metodo: "Pedidos express",
       pago: "PayPal",
@@ -204,7 +204,7 @@ export const pedidos = [
       avatar: "https://randomuser.me/api/portraits/women/12.jpg",
     },
     estado: "Entregado",
-    cantidad: "Rs. 200.00",
+    cantidad: "Bs. 200.00",
     envio: {
       metodo: "Pedidos express",
       pago: "PayPal",

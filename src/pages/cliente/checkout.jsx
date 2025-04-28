@@ -218,48 +218,60 @@ export default function Checkout() {
           </div>
         </div>
 
-        {/* Dirección de compra */}
-        <div className="mb-8">
-          <h2 className="text-sm uppercase tracking-wide mb-4">DIRECCIÓN DE COMPRA</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <input type="text" placeholder="Primer Nombre" className="border p-3 rounded" />
-            <input type="text" placeholder="Apellido" className="border p-3 rounded" />
-          </div>
-          <div className="mb-4">
-            <input type="text" placeholder="PAÍS" className="w-full border p-3 rounded" />
-          </div>
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Departamento, habitación, etc(opcional)"
-              className="w-full border p-3 rounded"
-            />
-          </div>
-          <div className="mb-4">
-            <input type="text" placeholder="Ciudad" className="w-full border p-3 rounded" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div className="relative">
-              <select className="w-full border p-3 rounded appearance-none pr-10">
-                <option>United Kingdom</option>
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                </svg>
-              </div>
+          <div className="mb-8">
+            <h2 className="text-sm uppercase tracking-wide mb-4">DIRECCIÓN DE COMPRA</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <input type="text" placeholder="Primer Nombre" className="border p-3 rounded" />
+              <input type="text" placeholder="Apellido" className="border p-3 rounded" />
             </div>
-            <input type="text" placeholder="Código Postal" className="border p-3 rounded" />
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Pais"
+                className="w-full border p-3 rounded"
+                value={formData.country || ""}
+                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+              />
+            </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Departamento"
+                className="w-full border p-3 rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <input type="text" placeholder="Ciudad" className="w-full border p-3 rounded" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className="relative">
+                <select
+            className="w-full border p-3 rounded appearance-none pr-10"
+            value={formData.country || ""}
+            onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                >
+            <option value="Bolivia">Bolivia</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Otro">Otro</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            </svg>
+                </div>
+              </div>
+              <input type="text" placeholder="Código Postal" className="border p-3 rounded" />
+            </div>
+            <div className="flex items-center">
+              <input type="checkbox" id="save-info" className="mr-2" />
+              <label htmlFor="save-info" className="text-sm">
+                Guarde esta información para la próxima vez.
+              </label>
+            </div>
           </div>
-          <div className="flex items-center">
-            <input type="checkbox" id="save-info" className="mr-2" />
-            <label htmlFor="save-info" className="text-sm">
-              Guarde esta información para la próxima vez.
-            </label>
-          </div>
-        </div>
 
-        {/* Botones de navegación */}
+          {/* Botones de navegación */}
         <div className="flex justify-between items-center">
           <a href="#" className="text-sm flex items-center text-gray-600">
             <svg
@@ -271,7 +283,7 @@ export default function Checkout() {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Regresar al Carrito
+            Regresar al carrito
           </a>
           <button
             className="bg-black text-white px-6 py-3 uppercase text-sm font-medium"

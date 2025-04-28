@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react"
-import { X, Minus, Plus } from "lucide-react"
+import { X, Minus, Plus, ChevronRight } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 const Carrito = ({ isOpen, onClose }) => {
   // Datos de ejemplo para el carrito
+  const navigate = useNavigate()
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -86,6 +88,11 @@ const Carrito = ({ isOpen, onClose }) => {
 
           {/* Contenido del carrito */}
           <div className="flex-grow">
+            <div className="flex justify-end items-center mt-2 mb-5">
+              <button className="bg-gray-900 text-white px-4 py-2 text-sm hover:bg-gray-800 rounded-sm" onClick={() => navigate("/catalogo")}>
+                Atrás <ChevronRight size={16} className="inline-block ml-1" />
+              </button>
+            </div>
             {/* Productos en el carrito */}
             <div className="space-y-4">
               {cartItems.map((item) => (
@@ -105,7 +112,7 @@ const Carrito = ({ isOpen, onClose }) => {
                           {item.size} | {item.color}
                         </p>
                       </div>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600"  onClick={() => setCartItems((prev) => prev.filter((cartItem) => cartItem.id !== item.id))}>
                         <X size={16} />
                       </button>
                     </div>
@@ -129,44 +136,9 @@ const Carrito = ({ isOpen, onClose }) => {
                 </div>
               ))}
             </div>
-
-            {/* Sección "Before You Go" */}
-            <div className="mt-8">
-              <h3 className="font-medium mb-4">Before You Go</h3>
-              <div className="flex gap-3 pb-4">
-                <div className="w-20 h-24 bg-gray-100 flex-shrink-0">
-                  <img
-                    src={suggestedItem.image || "/placeholder.svg"}
-                    alt={suggestedItem.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-grow">
-                  <h3 className="font-medium">{suggestedItem.name}</h3>
-                  <p className="text-sm text-gray-600">
-                    {suggestedItem.size} | {suggestedItem.color}
-                  </p>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="font-medium">${suggestedItem.price}</span>
-                    <button className="bg-gray-900 text-white px-4 py-2 text-sm uppercase hover:bg-gray-800">
-                      Añadir
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Indicadores de página */}
-            <div className="flex justify-center gap-1 mt-4 py-4">
-              <div className="w-2 h-2 rounded-full bg-gray-900"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-            </div>
           </div>
-
           {/* Pie del carrito */}
-          <div className="mt-auto pt-4 border-t p-4">
+          <div className="mt-auto">
             <div className="flex justify-between items-center mb-4">
               <div>
                 <span className="font-medium">Subtotal</span>{" "}
@@ -174,7 +146,7 @@ const Carrito = ({ isOpen, onClose }) => {
               </div>
               <span className="font-bold text-lg">${subtotal}</span>
             </div>
-            <button className="w-full bg-gray-900 text-white py-3 uppercase font-medium hover:bg-gray-800">
+            <button className="w-full bg-gray-900 text-white py-3 uppercase font-medium hover:bg-gray-800 rounded-sm" onClick={() => navigate("/checkout")}>
               Continuar con el pago
             </button>
             <p className="text-center text-sm mt-2 text-gray-600">Psst, consíguelo ahora antes de que se agote.</p>

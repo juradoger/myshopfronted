@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { CircleUser } from 'lucide-react';
+import { ChevronDown, ChevronRight, CircleUser } from 'lucide-react';
 
 export default function Dashboard() {
   const [chartView, setChartView] = useState('MENSUAL');
@@ -38,7 +38,7 @@ export default function Dashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold">PANEL</h1>
-            <p className="text-sm text-gray-500">Inicio {'>'} Panel de control</p>
+            <p className="flex text-start text-sm text-gray-500">Inicio <ChevronRight size={14} className=" flex-wrap mx-2 my-1 text-gray-400" />Panel de control</p>
           </div>
           <div className="text-sm text-gray-500">
             Oct 11, 2023 - Nov 11, 2023

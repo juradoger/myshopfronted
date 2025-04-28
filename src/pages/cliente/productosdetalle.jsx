@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import { fetchClothingProductById } from "../../services/api" // Importamos la función correcta
 import { ChevronRight, Truck, RotateCcw, Package } from "lucide-react"
+import { Navigate, useNavigate } from "react-router-dom"
+import Carrito from "./carrito"
 
 export default function DetalleProducto() {
   const [product, setProduct] = useState(null)
@@ -8,6 +10,7 @@ export default function DetalleProducto() {
   const [selectedColor, setSelectedColor] = useState("black")
   const [selectedSize, setSelectedSize] = useState("M")
   const [mainImage, setMainImage] = useState(0)
+  const navigate = useNavigate()  
 
   
   const productId = 1 
@@ -68,7 +71,6 @@ export default function DetalleProducto() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
-       
         <div className="lg:w-2/3">
           <div className="grid grid-cols-2 gap-2">
             {productImages.map((image, index) => (
@@ -87,15 +89,16 @@ export default function DetalleProducto() {
           </div>
         </div>
 
-       
         <div className="lg:w-1/3">
           <div className="sticky top-8">
-            <div className="text-xs text-gray-500 mb-1">Edición limitada • Hecho en España</div>
+            <div className="text-xs text-gray-500 mb-1">Edición limitada • Hecho en Bolivia</div>
             <h1 className="text-xl font-medium mb-1">{product.title}</h1>
             <div className="flex items-center mb-4">
               <span className="text-lg font-medium mr-2">${product.price}</span>
               <span className="text-gray-500 line-through">${originalPrice.toFixed(2)}</span>
             </div>
+
+            <div className="flex mb-1"></div>
 
             <div className="flex mb-1">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -140,14 +143,9 @@ export default function DetalleProducto() {
                   </button>
                 ))}
               </div>
-              <div className="text-xs text-right text-gray-500 mt-1">
-                <a href="#" className="underline">
-                  Guía de tallas
-                </a>
-              </div>
             </div>
 
-            <button className="w-full bg-black text-white py-3 mb-4 hover:bg-gray-800 transition-colors">
+            <button className="w-full bg-black text-white py-3 mb-4 hover:bg-gray-800 transition-colors" onClick={() => navigate("/carrito")}>
               AÑADIR AL CARRITO
             </button>
 
@@ -156,12 +154,6 @@ export default function DetalleProducto() {
                 <Truck className="h-5 w-5 mr-3 flex-shrink-0" />
                 <div>
                   <div className="text-sm font-medium">Envío gratis</div>
-                  <div className="text-xs text-gray-500">
-                    En todos los pedidos de más de $75.{" "}
-                    <a href="#" className="underline">
-                      Leer más
-                    </a>
-                  </div>
                 </div>
               </div>
 
@@ -169,12 +161,6 @@ export default function DetalleProducto() {
                 <RotateCcw className="h-5 w-5 mr-3 flex-shrink-0" />
                 <div>
                   <div className="text-sm font-medium">Devolución fácil</div>
-                  <div className="text-xs text-gray-500">
-                    Devolución gratuita en 30 días.{" "}
-                    <a href="#" className="underline">
-                      Leer más
-                    </a>
-                  </div>
                 </div>
               </div>
 
@@ -203,10 +189,9 @@ export default function DetalleProducto() {
               </div>
 
               <div className="mb-4">
-                <div className="text-sm font-medium">Fit</div>
+                <div className="text-sm font-medium">Proveedor</div>
                 <div className="text-sm text-gray-700">
-                  <div>Oversized y holgado</div>
-                  <div>Corte relajado</div>
+                  <div>Tienda Mariela's</div>
                 </div>
               </div>
 
@@ -399,23 +384,9 @@ export default function DetalleProducto() {
               <div className="text-xs text-gray-500">14 días ago</div>
             </div>
             <p className="text-sm mb-4">
-              Warm and very attractive on my husband. Got this to keep my husband warm on those chilly fall days. He
-              loves it as it not only looks good but it's toasty warm too.
+              Muy comodo y bueno
             </p>
-            <div className="grid grid-cols-2 gap-4 text-xs text-gray-500">
-              <div>
-                <div>Height: 5'8" - 5'11"</div>
-                <div>Weight: 160 lbs - 180 lbs</div>
-                <div>Body type: Lean</div>
-              </div>
-              <div>
-                <div>Size Purchased: L</div>
-                <div>Usual Size: L</div>
-              </div>
-            </div>
-          </div>
-
-          
+          </div>    
           
           <div className="border-t pt-6">
             <div className="flex justify-between items-start mb-2">
@@ -432,20 +403,8 @@ export default function DetalleProducto() {
               <div className="text-xs text-gray-500">14 días ago</div>
             </div>
             <p className="text-sm mb-4">
-              Super comfy. Great quality, warm and super comfy. Got me XL, I have a large torso and it fits perfectly.
-              It feels like a soft oversized jacket is good.
+              Me queda perfecto y es muy comodo, lo recomiendo
             </p>
-            <div className="grid grid-cols-2 gap-4 text-xs text-gray-500">
-              <div>
-                <div>Height: 5'8" - 5'11"</div>
-                <div>Weight: 180 lbs - 200 lbs</div>
-                <div>Body type: Lean</div>
-              </div>
-              <div>
-                <div>Size Purchased: XL</div>
-                <div>Usual Size: L</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

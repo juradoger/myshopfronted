@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MoreVertical } from "lucide-react";
+import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { pedidos as pedidosDB } from "../../data/pedidos";
 
@@ -8,20 +8,20 @@ const TablaProductos = () => {
 
   const navigate = useNavigate();
 
-  const startDate = "Feb 16, 2022";
-  const endDate = "Feb 20, 2022";
+  const startDate = "Abril 8, 2025";
+  const endDate = "Mayo 10, 2025";
 
   return (
     <div className="bg-gray-100">
       <div className="bg-white">
         {/* Header */}
         <div className="p-4">
-          <h1 className="text-base font-medium mb-1">Lista de pedidos</h1>
+          <h1 className="text-base font-medium mb-1">TODOS LOS PEDIDOS</h1>
           <div className="flex justify-between items-center">
-            <div className="text-xs text-gray-500">
+            <div className="flex text-start text-xs text-gray-500">
               <span>Inicio</span>
-              <span> &gt; </span>
-              <span>Lista de pedidos</span>
+              <ChevronRight size={14} className=" flex-wrap mx-2 my-1 text-gray-400" />
+              <span>Lista de Pedidos</span>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
@@ -53,63 +53,59 @@ const TablaProductos = () => {
                   {startDate} - {endDate}
                 </div>
               </div>
-              <div className="relative">
-                <button className="flex items-center gap-2 text-xs border border-gray-300 rounded px-3 py-1.5">
-                  <span>Cambiar estado</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </button>
-              </div>
             </div>
           </div>
         </div>
 
         <div className="px-4 pb-4 mt-4">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="font-medium text-sm">Compras recientes</h2>
-            <button className="text-gray-500">
-              <MoreVertical size={16} />
-            </button>
+            <div className="relative inline-block">
+              {/* Ícono MoreVertical */}
+              <MoreVertical size={16} className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500" />
+
+              {/* Select con la flechita */}
+              <select className="border border-gray-300 rounded px-3 py-1 pr-8 text-sm bg-white appearance-none pl-8">
+                <option>Recientes</option>
+                <option>Hace un mes</option>
+                <option>Hace un año</option>
+              </select>
+
+              {/* Flechita al lado derecho del select */}
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-gray-500"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="text-xs text-gray-600">
-                  <th className="py-3 pr-4 text-left w-12">
-                    <input
-                      type="checkbox"
-                      className="rounded border-gray-300"
-                    />
-                  </th>
-                  <th className="py-3 px-4 text-left">Producto</th>
-                  <th className="py-3 px-4 text-left">ID de pedido</th>
+                  <th className="py-3 px-4 text-left">Pedido</th>
+                  <th className="py-3 px-4 text-left">ID</th>
                   <th className="py-3 px-4 text-left">Fecha</th>
-                  <th className="py-3 px-4 text-left">Nombre del cliente</th>
+                  <th className="py-3 px-4 text-left">Cliente</th>
                   <th className="py-3 px-4 text-left">Estado</th>
-                  <th className="py-3 px-4 text-left">Cantidad</th>
+                  <th className="py-3 px-4 text-left">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {pedidos.map((pedido, index) => (
                   <tr key={index} className="text-xs">
-                    <td className="py-3 pr-4">
-                      <input
-                        type="checkbox"
-                        className="rounded border-gray-300"
-                      />
-                    </td>
                     <td className="py-3 px-4">{pedido.producto}</td>
                     <td
                       className="py-3 px-4"
@@ -131,11 +127,10 @@ const TablaProductos = () => {
                     <td className="py-3 px-4">
                       <div className="flex items-center">
                         <span
-                          className={`w-1.5 h-1.5 rounded-full mr-2 ${
-                            pedido.estado === "Entregado"
+                          className={`w-1.5 h-1.5 rounded-full mr-2 ${pedido.estado === "Entregado"
                               ? "bg-blue-500"
                               : "bg-orange-500"
-                          }`}
+                            }`}
                         ></span>
                         <span>{pedido.estado}</span>
                       </div>
@@ -167,7 +162,7 @@ const TablaProductos = () => {
                 10
               </button>
               <button className="px-2 h-6 flex items-center justify-center rounded border border-gray-200 text-xs ml-1">
-                NEXT
+                <ChevronLeft size={16} className="transform rotate-180" />
               </button>
             </div>
           </div>
