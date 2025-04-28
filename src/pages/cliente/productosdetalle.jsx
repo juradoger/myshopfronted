@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { fetchClothingProductById } from '../../services/api'; // Importamos la función correcta
 import { ChevronRight, Truck, RotateCcw, Package } from 'lucide-react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import Carrito from './carrito';
 import { useAppStore } from '../../store/app-store';
 
 export default function DetalleProducto() {
+  const params = useParams();
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState('black');
@@ -14,7 +16,7 @@ export default function DetalleProducto() {
   const navigate = useNavigate();
   const { setIsCartOpen } = useAppStore();
 
-  const productId = 1;
+  const productId = Number(params?.id);
 
   useEffect(() => {
     const getProduct = async () => {

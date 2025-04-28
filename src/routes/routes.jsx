@@ -22,7 +22,7 @@ export function MisRutas() {
           {/* Rutas anidadas dentro del ClientLayout */}
           <Route path='/' element={<Inicio />} />
           <Route path='/catalogo' element={<Catalogo />} />
-          <Route path='/detalleproducto' element={<DetalleProducto />} />
+          <Route path='/detalleproducto/:id' element={<DetalleProducto />} />
         </Route>
 
         <Route path='/login' element={<LoginRegistrar />} />
