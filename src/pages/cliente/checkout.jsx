@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { fetchClothingProducts } from "../../services/api"
+import { useAppStore } from "../../store/app-store"
 
 export default function Checkout() {
   const [products, setProducts] = useState([])
@@ -9,7 +10,11 @@ export default function Checkout() {
   const [formData, setFormData] = useState({
     email: "ejemplo@gmail.com",
     address: "Bolivia Tarija central ",
-    shippingMethod: "Brazil paqueteria internacional meguin",
+    shippingMethod: {
+      0: "Tarjeta de credito",
+      1: "Tarjeta de debito",
+      2: "Transferencia",
+    },
     shippingPrice: 9.68,
     shippingDays: "28 to 34 business days",
     cardNumber: "",
@@ -17,8 +22,9 @@ export default function Checkout() {
     expiryDate: "",
     securityCode: "",
   })
-
+  const [message, setMessage] = useState(false)
   const receiptCanvasRef = useRef(null)
+  const { setIsCartOpen } = useAppStore();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -39,7 +45,9 @@ export default function Checkout() {
 
     loadProducts()
   }, [])
-
+  const handleClick = () => {
+    setMessage(true)
+  }
   const handleContinueToShipping = () => {
     setCurrentStep(2)
   }
@@ -180,7 +188,7 @@ export default function Checkout() {
 
     yPos += 30
     ctx.font = "14px Arial"
-    ctx.fillText("Si tiene alguna pregunta, contáctenos a support@tienda.com", 250, yPos)
+    ctx.fillText("Si tiene alguna pregunta, contáctenos a myshop@tienda.com", 250, yPos)
 
     // Convertir el canvas a una imagen descargable
     const dataUrl = canvas.toDataURL("image/png")
@@ -198,82 +206,51 @@ export default function Checkout() {
       <>
         {/* Tabs de navegación */}
         <div className="flex border-b mb-8">
-          <div className="mr-8 pb-2 text-gray-400">Carrito</div>
           <div className="mr-8 pb-2 border-b-2 border-black font-medium">Información</div>
-          <div className="mr-8 pb-2 text-gray-400">Compra</div>
+          <div className="mr-8 pb-2 text-gray-400">Método de pago</div>
           <div className="pb-2 text-gray-400">Pago</div>
         </div>
 
         {/* Información de contacto */}
         <div className="mb-8">
-          <h2 className="text-sm uppercase tracking-wide mb-4">INFORMACIÓN DE CONTACTO</h2>
+          <h2 className="text-sm uppercase tracking-wide mb-4 font-medium">INFORMACIÓN DE CONTACTO</h2>
           <div className="mb-4">
-            <input type="text" placeholder="Correo o número de celular" className="w-full border p-3 rounded" />
+            <input type="text" placeholder="Correo" className="w-full border p-3 rounded" />
           </div>
-          <div className="flex items-center">
-            <input type="checkbox" id="newsletter" className="mr-2" />
-            <label htmlFor="newsletter" className="text-sm">
-              Mantenme al día sobre novedades y ofertas exclusivas.
-            </label>
+          <div className="mb-4">
+            <input type="text" placeholder="Direccion" className="w-full border p-3 rounded" />
           </div>
         </div>
 
-          <div className="mb-8">
-            <h2 className="text-sm uppercase tracking-wide mb-4">DIRECCIÓN DE COMPRA</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <input type="text" placeholder="Primer Nombre" className="border p-3 rounded" />
-              <input type="text" placeholder="Apellido" className="border p-3 rounded" />
-            </div>
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Pais"
-                className="w-full border p-3 rounded"
-                value={formData.country || ""}
-                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-              />
-            </div>
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Departamento"
-                className="w-full border p-3 rounded"
-              />
-            </div>
-            <div className="mb-4">
-              <input type="text" placeholder="Ciudad" className="w-full border p-3 rounded" />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div className="relative">
-                <select
-            className="w-full border p-3 rounded appearance-none pr-10"
-            value={formData.country || ""}
-            onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                >
-            <option value="Bolivia">Bolivia</option>
-            <option value="Paraguay">Paraguay</option>
-            <option value="Argentina">Argentina</option>
-            <option value="Otro">Otro</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-            </svg>
-                </div>
-              </div>
-              <input type="text" placeholder="Código Postal" className="border p-3 rounded" />
-            </div>
-            <div className="flex items-center">
-              <input type="checkbox" id="save-info" className="mr-2" />
-              <label htmlFor="save-info" className="text-sm">
-                Guarde esta información para la próxima vez.
-              </label>
-            </div>
+        <div className="mb-8">
+          <h2 className="text-sm uppercase tracking-wide mb-4 font-medium">DIRECCIÓN DE ENVIO</h2>
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Pais"
+              className="w-full border p-3 rounded"
+              value={formData.country || ""}
+              onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+            />
           </div>
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Departamento"
+              className="w-full border p-3 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <input type="text" placeholder="Ciudad" className="w-full border p-3 rounded" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <input type="text" placeholder="Código Postal" className="border p-3 rounded" />
+          </div>
+        </div>
 
-          {/* Botones de navegación */}
+        {/* Botones de navegación */}
         <div className="flex justify-between items-center">
-          <a href="#" className="text-sm flex items-center text-gray-600">
+          <a href="#" className="text-sm flex items-center text-gray-600" onClick={() => setIsCartOpen(true)}>
             <svg
               className="w-4 h-4 mr-1"
               fill="none"
@@ -283,10 +260,10 @@ export default function Checkout() {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Regresar al carrito
+            REGRESAR AL CARRITO
           </a>
           <button
-            className="bg-black text-white px-6 py-3 uppercase text-sm font-medium"
+            className="bg-black text-white px-6 py-3 uppercase text-sm font-medium rounded-sm"
             onClick={handleContinueToShipping}
           >
             CONTINUAR CON LA COMPRA
@@ -302,33 +279,13 @@ export default function Checkout() {
       <>
         {/* Tabs de navegación */}
         <div className="flex border-b mb-8">
-          <div className="mr-8 pb-2 text-gray-400">Carrito</div>
           <div className="mr-8 pb-2 text-gray-400">Información</div>
-          <div className="mr-8 pb-2 border-b-2 border-black font-medium">Compra</div>
+          <div className="mr-8 pb-2 border-b-2 border-black font-medium">Método de pago</div>
           <div className="pb-2 text-gray-400">Pago</div>
         </div>
-
-        {/* Información de contacto resumida */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center border-b pb-3 mb-3">
-            <div className="flex items-center">
-              <span className="text-sm mr-2">Contacto</span>
-              <span className="text-sm text-gray-600">{formData.email}</span>
-            </div>
-            <button className="text-sm text-gray-600">Cambiar</button>
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <span className="text-sm mr-2">Enviar A</span>
-              <span className="text-sm text-gray-600">{formData.address}</span>
-            </div>
-            <button className="text-sm text-gray-600">Cambiar</button>
-          </div>
-        </div>
-
         {/* Método de pago */}
         <div className="mb-8">
-          <h2 className="text-sm uppercase tracking-wide mb-4">MÉTODO DE PAGO</h2>
+          <h2 className="text-sm uppercase tracking-wide mb-4 font-medium">MÉTODO DE PAGO</h2>
 
           <div className="border-b pb-3 mb-3">
             <label className="flex items-center justify-between py-3 cursor-pointer">
@@ -336,90 +293,53 @@ export default function Checkout() {
                 <input
                   type="radio"
                   name="shipping"
-                  className="mr-3"
-                  checked={formData.shippingMethod === "Brazil paqueteria internacional meguin"}
+                  className="mr-3 cursor-pointer"
+                  checked={formData.shippingMethod === "Tarjeta de credito"}
                   onChange={() =>
                     handleShippingMethodChange(
-                      "Brazil paqueteria internacional meguin",
-                      9.68,
-                      "28 a 34 dias habiles",
+                      "Tarjeta de credito",
                     )
                   }
                 />
-                <span>Brazil paqueteria internacional meguin</span>
+                <span>Tarjeta de credito</span>
               </div>
-              <span>Bs. 9.68</span>
             </label>
-            <div className="pl-6 text-sm text-gray-600 pb-2">28 to 34 business days</div>
           </div>
-
           <div className="border-b pb-3 mb-3">
-            <label className="flex items-center justify-between py-3 cursor-pointer">
+            <label className="flex items-center justify-between py-3">
               <div className="flex items-center">
                 <input
                   type="radio"
                   name="shipping"
-                  className="mr-3"
-                  checked={formData.shippingMethod === "Brazil paqueteria internacional meguin"}
+                  className="mr-3 cursor-pointer"
+                  checked={formData.shippingMethod === "Tarjeta de debito"}
                   onChange={() =>
                     handleShippingMethodChange(
-                      "Brazil paqueteria internacional meguin",
-                      11.63,
-                      "6 to 10 business days",
+                      "Tarjeta de debito",
                     )
                   }
                 />
-                <span>Brazil paqueteria internacional meguin</span>
+                <span>Tarjeta de debito</span>
               </div>
-              <span>Bs. 11.63</span>
             </label>
-            <div className="pl-6 text-sm text-gray-600 pb-2">6 to 10 business days</div>
           </div>
-
           <div className="border-b pb-3 mb-3">
-            <label className="flex items-center justify-between py-3 cursor-pointer">
+            <label className="flex items-center justify-between py-3">
               <div className="flex items-center">
                 <input
                   type="radio"
                   name="shipping"
-                  className="mr-3"
-                  checked={formData.shippingMethod === "Brazil paqueteria internacional meguin (28-34)"}
+                  className="mr-3 cursor-pointer"
+                  checked={formData.shippingMethod === "Transferencia"}
                   onChange={() =>
                     handleShippingMethodChange(
-                      "Brazil paqueteria internacional meguin (28-34)",
-                      56.57,
-                      "28 a 34 dias habiles",
+                      "Transferencia",
                     )
                   }
                 />
-                <span>Brazil paqueteria internacional meguin</span>
+                <span>Transferencia</span>
               </div>
-              <span>Bs. 56.57</span>
             </label>
-            <div className="pl-6 text-sm text-gray-600 pb-2">28 a 34 dias habiles</div>
-          </div>
-
-          <div>
-            <label className="flex items-center justify-between py-3 cursor-pointer">
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  name="shipping"
-                  className="mr-3"
-                  checked={formData.shippingMethod === "Brazil paqueteria internacional meguin (4-7)"}
-                  onChange={() =>
-                    handleShippingMethodChange(
-                      "Brazil paqueteria internacional meguin (4-7)",
-                      92.18,
-                      "4 a 7 dias habiles",
-                    )
-                  }
-                />
-                <span>Brazil paqueteria internacional meguin</span>
-              </div>
-              <span>Bs. 92.18</span>
-            </label>
-            <div className="pl-6 text-sm text-gray-600 pb-2">4 a 7 dias habiles</div>
           </div>
         </div>
 
@@ -435,10 +355,10 @@ export default function Checkout() {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Regresar A Facturación
+            REGRESAR A INFORMACIÓN
           </button>
           <button
-            className="bg-black text-white px-6 py-3 uppercase text-sm font-medium"
+            className="bg-black text-white px-6 py-3 uppercase text-sm font-medium rounded-sm"
             onClick={handleContinueToPayment}
           >
             CONTINUAR CON EL PAGO
@@ -454,45 +374,18 @@ export default function Checkout() {
       <>
         {/* Tabs de navegación */}
         <div className="flex border-b mb-8">
-          <div className="mr-8 pb-2 text-gray-400">Carrito</div>
           <div className="mr-8 pb-2 text-gray-400">Información</div>
-          <div className="mr-8 pb-2 text-gray-400">Compra</div>
+          <div className="mr-8 pb-2 text-gray-400">Método de pago</div>
           <div className="pb-2 border-b-2 border-black font-medium">Pago</div>
-        </div>
-
-        {/* Información de contacto resumida */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center border-b pb-3 mb-3">
-            <div className="flex items-center">
-              <span className="text-sm mr-2">Contacto</span>
-              <span className="text-sm text-gray-600">{formData.email}</span>
-            </div>
-            <button className="text-sm text-gray-600">Cambiar</button>
-          </div>
-          <div className="flex justify-between items-center border-b pb-3 mb-3">
-            <div className="flex items-center">
-              <span className="text-sm mr-2">Enviar A</span>
-              <span className="text-sm text-gray-600">{formData.address}</span>
-            </div>
-            <button className="text-sm text-gray-600">Cambiar</button>
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <span className="text-sm mr-2">Método</span>
-              <span className="text-sm text-gray-600">Nombre de producto · $17.29</span>
-            </div>
-            <button className="text-sm text-gray-600">Cambiar</button>
-          </div>
         </div>
 
         {/* Método de pago */}
         <div className="mb-8">
-          <h2 className="text-sm uppercase tracking-wide mb-4">MÉTODO DE PAGO</h2>
-          <p className="text-sm text-gray-600 mb-4">Toda Transacción Es Segura Y Encriptada.</p>
+          <h2 className="text-sm uppercase tracking-wide mb-4 font-medium">MÉTODO DE PAGO</h2>
 
           <div className="mb-6">
             <div className="flex justify-between items-center border p-3 rounded mb-4 bg-gray-100">
-              <span className="font-medium">TARJETA DE CRÉDITO</span>
+              <span className="font-medium">{formData.shippingMethod}</span>
               <div className="bg-yellow-400 rounded-full w-6 h-6 flex items-center justify-center">
                 <svg
                   className="w-4 h-4"
@@ -539,7 +432,7 @@ export default function Checkout() {
                 name="cardHolder"
                 value={formData.cardHolder}
                 onChange={handleInputChange}
-                placeholder="Nombre de titular"
+                placeholder="Titular"
                 className="w-full border p-3 rounded"
               />
             </div>
@@ -583,28 +476,7 @@ export default function Checkout() {
               </div>
             </div>
           </div>
-
-          {/* Dirección de envío */}
-          <div className="mb-8">
-            <h2 className="text-sm uppercase tracking-wide mb-4">DIRECCIÓN DE ENVÍO</h2>
-            <p className="text-sm text-gray-600 mb-4">Selecciona Una Dirección Y Elige un Método De Pago</p>
-
-            <div className="border rounded mb-3">
-              <label className="flex items-center p-4 cursor-pointer">
-                <input type="radio" name="address" className="mr-3" checked />
-                <span>Brazil paqueteria internacional meguin</span>
-              </label>
-            </div>
-
-            <div className="border rounded">
-              <label className="flex items-center p-4 cursor-pointer">
-                <input type="radio" name="address" className="mr-3" />
-                <span>Brazil paqueteria internacional meguin</span>
-              </label>
-            </div>
-          </div>
         </div>
-
         {/* Botones de navegación */}
         <div className="flex justify-between items-center">
           <button className="text-sm flex items-center text-gray-600" onClick={handleBackToShipping}>
@@ -620,8 +492,12 @@ export default function Checkout() {
             REGRESAR A COMPRAS
           </button>
           <div className="flex flex-col space-y-2">
-            <button className="bg-black text-white px-6 py-3 uppercase text-sm font-medium">ACEPTAR</button>
-            <button className="bg-black text-white px-6 py-3 uppercase text-sm font-medium" onClick={generateReceipt}>
+            {!message ? (<button onClick={handleClick} className="bg-black text-white px-6 py-3 uppercase text-sm font-medium rounded-sm">ACEPTAR</button>) : (
+              <div className="mt-6 p-4 bg-green-100 text-green-800 border border-green-300 rounded-md text-center">
+                ¡Gracias por su compra! Su pago fue procesado con éxito.
+              </div>
+            )}
+            <button className="bg-black text-white px-6 py-3 uppercase text-sm font-medium rounded-sm" onClick={generateReceipt}>
               GENERAR COMPROBANTE
             </button>
           </div>
@@ -668,26 +544,23 @@ export default function Checkout() {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm">Nombre de producto</p>
+                    <p className="text-sm">{product.title}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm">Bs. {product.price.toFixed(2)}</p>
+                  <p className="text-sm">Bs. {product.price.toFixed(2)} u.</p>
                 </div>
               </div>
             ))}
           </div>
-
           {/* Resumen de costos */}
           <div className="border-b pb-6 mb-6">
-            <div className="flex justify-between mb-4">
-              <p>Subtotal</p>
-              <p>Bs. {subtotal.toFixed(2)}</p>
-            </div>
-            <div className="flex justify-between">
-              <p>Compra</p>
-              <p className="text-gray-500">{currentStep > 1 ? "Calculado" : "Calcular"}</p>
-            </div>
+            {products.map((product, index) => (
+              <div key={index} className="flex justify-between mb-4">
+                <p>{product.title} </p>
+                <p>45 u./</p>
+              </div>
+            ))}
           </div>
 
           {/* Total */}

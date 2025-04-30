@@ -154,9 +154,9 @@ export default function Dashboard() {
               <thead>
                 <tr>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Producto</th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">ID de pedido</th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">ID</th>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Fecha</th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Nombre del cliente</th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Cliente</th>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Estado</th>
                   <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Cantidad</th>
                 </tr>

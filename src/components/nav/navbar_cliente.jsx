@@ -56,10 +56,13 @@ const NavbarCliente = ({ children }) => {
 
   const filterCategories = {
     categories: [
-      { name: 'Ropa - Para todos los géneros', checked: false },
-      { name: 'Artículos, Weekenders & Complementos', checked: false },
-      { name: 'Camisas de vestir y camisas planchadas', checked: false },
-      { name: 'Lino colorido y estampado', checked: false },
+      { name: 'Hombre', checked: false },
+      { name: 'Mujer', checked: false },
+      { name: 'Niño', checked: false },
+      { name: 'Niña', checked: false },
+      { name: 'Unisex', checked: false },
+
+
     ],
     colors: [
       { name: 'Negro', color: 'bg-black', checked: false },

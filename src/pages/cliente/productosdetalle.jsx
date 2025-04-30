@@ -179,21 +179,21 @@ export default function DetalleProducto() {
               <div className='flex items-start'>
                 <Truck className='h-5 w-5 mr-3 flex-shrink-0' />
                 <div>
-                  <div className='text-sm font-medium'>Envío gratis</div>
+                  <div className='text-sm font-medium'>Envío - Gratis</div>
                 </div>
               </div>
 
               <div className='flex items-start'>
                 <RotateCcw className='h-5 w-5 mr-3 flex-shrink-0' />
                 <div>
-                  <div className='text-sm font-medium'>Devolución fácil</div>
+                  <div className='text-sm font-medium'>Tiempo devolución - 3 dias después</div>
                 </div>
               </div>
 
               <div className='flex items-start'>
                 <Package className='h-5 w-5 mr-3 flex-shrink-0' />
                 <div>
-                  <div className='text-sm font-medium'>Envío y entrega</div>
+                  <div className='text-sm font-medium'>Tiempo entrega </div>
                   <div className='text-xs text-gray-500'>
                     Recibe en casa normalmente en 3-5 días.
                   </div>
@@ -218,9 +218,9 @@ export default function DetalleProducto() {
 
             <div className='border-t py-4'>
               <div className='mb-4'>
-                <div className='text-sm font-medium'>Modelo</div>
+                <div className='text-sm font-medium'>Dimensiones</div>
                 <div className='text-sm text-gray-700'>
-                  Modelo: 1,87 m, vistiendo la talla M
+                 180 cm, 75 kg, talla M
                 </div>
               </div>
 

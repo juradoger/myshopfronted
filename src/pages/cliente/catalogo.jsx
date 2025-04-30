@@ -92,11 +92,11 @@ export default function Catalogo() {
                   </div>
                   {product.category === "men's clothing" ? (
                     <p className='mt-1 text-xs text-gray-500'>
-                    MATERIAL RECICLADO • HECHO EN BOLIVIA
+                    Categoría: {product.category}
                     </p>
                   ) : (
                     <p className='mt-1 text-xs text-gray-500'>
-                    + COLORES VARIADOS
+                    Categoría: {product.category}
                     </p>
                   )}
                   </div>

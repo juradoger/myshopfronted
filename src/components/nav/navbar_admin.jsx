@@ -31,12 +31,11 @@ const NavbarAdmin = ({ children }) => {
   const navigate= useNavigate()
 
   const categories = [
-    { name: "Blusas", count: "21" },
-    { name: "Lorem Ipsum", count: "32" },
-    { name: "Lorem Ipsum", count: "13" },
-    { name: "Lorem Ipsum", count: "14" },
-    { name: "Lorem Ipsum", count: "06" },
-    { name: "Lorem Ipsum", count: "11" },
+    { name: "Hombre", count: "21" },
+    { name: "Mujer", count: "32" },
+    { name: "Niño", count: "13" },
+    { name: "Niña", count: "14" },
+    { name: "Unisex", count: "06" },
   ]
 
   const toggleSidebar = () => {
