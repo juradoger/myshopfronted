@@ -1,17 +1,43 @@
 import { useState, useEffect } from 'react';
-import { fetchClothingProducts } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import productService from '../../services/productos-service';
+import { useAppStore } from '../../store/app-store';
 
 export default function Catalogo() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const store = useAppStore();
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const data = await fetchClothingProducts();
-        setProducts(data);
+        const data = await productService.getAll();
+
+        // Aplicar filtros del store
+        const filteredData = data.filter((product) => {
+          const { categoria, color, talla } = store.filtros;
+
+          // Filtrar por categoría
+          const matchesCategory =
+            categoria.length === 0 || categoria.includes(product.category);
+
+          // Filtrar por color
+          const matchesColor =
+            color.length === 0 ||
+            product.colors.some((productColor) =>
+              color.includes(productColor.color)
+            );
+
+          // Filtrar por talla
+          const matchesSize =
+            talla.length === 0 ||
+            product.tags.some((tag) => talla.includes(tag));
+
+          return matchesCategory && matchesColor && matchesSize;
+        });
+
+        setProducts(filteredData);
         setLoading(false);
       } catch (error) {
         console.error('Error al cargar productos:', error);
@@ -20,7 +46,7 @@ export default function Catalogo() {
     };
 
     getProducts();
-  }, []);
+  }, [store.filtros]);
 
   const calculateDiscount = (price) => {
     const discountPercent = Math.floor(Math.random() * 40) + 10; // Entre 10% y 50%
@@ -54,51 +80,46 @@ export default function Catalogo() {
                 );
                 return (
                   <div key={product.id} className='group'>
-                  <div className='relative mb-2'>
-                    <div className='absolute top-2 left-2 bg-white px-2 py-1 text-xs font-medium text-red-600'>
-                    {product.salesPercentage}% off
+                    <div className='relative mb-2'>
+                      <div className='absolute top-2 left-2 bg-white px-2 py-1 text-xs font-medium text-red-600'>
+                        {product.salesPercentage}% off
+                      </div>
+                      <img
+                        src={product.images[0] || '/placeholder.svg'}
+                        alt={product.title}
+                        className='w-full h-[400px] object-cover bg-gray-100'
+                        onClick={
+                          () => navigate(`/detalleproducto/${product.id}`) // Aquí se está pasando el id
+                        }
+                      />
                     </div>
-                    <img
-                    src={product.image || '/placeholder.svg'}
-                    alt={product.title}
-                    className='w-full h-[400px] object-cover bg-gray-100'
-                    onClick={() =>
-                      navigate(`/detalleproducto/${product.id}`) // Aquí se está pasando el id
-                    }
-                    />
-                  </div>
-                  <h3 className='text-sm font-medium'>{product.title}</h3>
-                  <div className='mt-1 flex items-center justify-between'>
-                    <p className='text-sm font-medium'>
-                    Ahora Bs. {product.price}
-                    </p>
-                    <p className='text-sm text-gray-500 line-through'>
-                    Bs. {originalPrice}
-                    </p>
-                  </div>
-                  <div className='mt-2 flex gap-1'>
-                    <button className='h-4 w-4 rounded-full bg-black'></button>
-                    {product.color === 'black' && (
-                    <button className='h-4 w-4 rounded-full bg-black'></button>
+                    <h3 className='text-sm font-medium'>{product.title}</h3>
+                    <div className='mt-1 flex items-center justify-between'>
+                      <p className='text-sm font-medium'>
+                        Ahora Bs. {product.price}
+                      </p>
+                      <p className='text-sm text-gray-500 line-through'>
+                        Bs. {originalPrice}
+                      </p>
+                    </div>
+                    <div className='mt-2 flex gap-1'>
+                      {product.colors.map((color) => (
+                        <span
+                          key={color}
+                          className='w-4 h-4 rounded-full'
+                          style={{ backgroundColor: color.codigohx }}
+                        ></span>
+                      ))}
+                    </div>
+                    {product.category === "men's clothing" ? (
+                      <p className='mt-1 text-xs text-gray-500'>
+                        Categoría: {product.category}
+                      </p>
+                    ) : (
+                      <p className='mt-1 text-xs text-gray-500'>
+                        Categoría: {product.category}
+                      </p>
                     )}
-                    {product.color === 'blue' && (
-                    <button className='h-4 w-4 rounded-full bg-blue-600'></button>
-                    )}
-                    {product.color === 'red' && (
-                    <button className='h-4 w-4 rounded-full bg-red-600'></button>
-                    )}
-                    <button className='h-4 w-4 rounded-full bg-amber-700'></button>
-                    <button className='h-4 w-4 rounded-full bg-gray-700'></button>
-                  </div>
-                  {product.category === "men's clothing" ? (
-                    <p className='mt-1 text-xs text-gray-500'>
-                    Categoría: {product.category}
-                    </p>
-                  ) : (
-                    <p className='mt-1 text-xs text-gray-500'>
-                    Categoría: {product.category}
-                    </p>
-                  )}
                   </div>
                 );
               })}

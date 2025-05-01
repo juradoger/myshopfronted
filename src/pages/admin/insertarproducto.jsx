@@ -7,45 +7,53 @@ import {
   Image,
   Trash2,
 } from 'lucide-react';
-import { useParams } from 'react-router-dom';
-import { productos } from './tablaproductosreal';
+import { useNavigate, useParams } from 'react-router-dom';
+import { uploadFileToFirebase } from '../../services/storage-service';
+import productService from '../../services/productos-service';
 
 const colors = [
-  { name: 'Negro', color: 'bg-black', checked: false },
-  { name: 'Azul', color: 'bg-blue-600', checked: false },
-  { name: 'Café', color: 'bg-amber-800', checked: false },
-  { name: 'Verde', color: 'bg-green-700', checked: false },
-  { name: 'Púrpura', color: 'bg-purple-700', checked: false },
-  { name: 'Naranja', color: 'bg-orange-500', checked: false },
-  { name: 'Rosa', color: 'bg-pink-300', checked: false },
-  { name: 'Rojo', color: 'bg-red-600', checked: false },
-  { name: 'Beige', color: 'bg-amber-200', checked: false },
+  { color: 'Negro', codigohx: '#000000' },
+  { color: 'Azul', codigohx: '#2563EB' },
+  { color: 'Café', codigohx: '#78350F' },
+  { color: 'Verde', codigohx: '#047857' },
+  { color: 'Púrpura', codigohx: '#6B21A8' },
+  { color: 'Naranja', codigohx: '#F97316' },
+  { color: 'Rosa', codigohx: '#F9A8D4' },
+  { color: 'Rojo', codigohx: '#DC2626' },
+  { color: 'Beige', codigohx: '#F5F5DC' },
 ];
 
-export default function Insertar() {
-  const params = useParams();
-  const id = params?.id;
+export default function Insertar({ initialData }) {
+  const isEdit = initialData && initialData?.id;
 
-  const editProduct = productos.find((p) => p.id == id);
+  const navigate = useNavigate();
+
+  const editProduct = null; // productos has been removed, set editProduct to null
 
   const [product, setProduct] = useState(
-    editProduct
-      ? editProduct
+    initialData
+      ? initialData
       : {
-          name: '',
-          description: '',
           category: '',
-          brand: '',
-          sku: '',
-          stock: '',
-          regularPrice: '',
-          salePrice: '',
-          tags: ['Lorem', 'Lorem', 'Lorem'],
           colors: [],
+          description: '',
+          details: ['', '', ''],
+          images: [],
+          brand: '',
+          name: '',
+          package_price: 0,
+          price: 0,
+          provider: '',
+          sku: '',
+          subcategory: '',
+          tags: [],
+          units_package: 0,
+          stock: 0,
         }
   );
 
   const [newTag, setNewTag] = useState('');
+  const [newDetail, setNewDetail] = useState('');
   const [images, setImages] = useState([]);
 
   const handleInputChange = (e) => {
@@ -73,6 +81,35 @@ export default function Insertar() {
     });
   };
 
+  const handleAddDetail = () => {
+    if (product.details.length >= 3) {
+      alert('No puedes añadir más de 5 details');
+      return;
+    }
+
+    if (newTag.trim() !== '') {
+      setProduct({
+        ...product,
+        details: [...product.details, newTag.trim()],
+      });
+      setNewTag('');
+    }
+  };
+
+  const handleRemoveDetail = (detailToRemove) => {
+    setProduct({
+      ...product,
+      details: product.details.filter((detail) => detail !== detailToRemove),
+    });
+  };
+
+  const handleKeyDownDetail = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddDetail();
+    }
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -80,19 +117,60 @@ export default function Insertar() {
     }
   };
 
+  const handleSave = async (e) => {
+    e.preventDefault();
+
+    if (initialData) {
+      await productService.update(product);
+    } else {
+      await productService.create(product);
+    }
+
+    navigate('/admin/productos');
+  };
+
+  const handleFileUpload = async (e) => {
+    if (product.images.length >= 4) {
+      alert('No puedes añadir más de 4 images');
+      return;
+    }
+
+    const files = Array.from(e.target.files);
+
+    for (const file of files) {
+      try {
+        // Sube el archivo a Firebase y obtiene la URL
+        const url = await uploadFileToFirebase(file, `productos/${file.name}`);
+
+        // Actualiza el estado de imágenes locales
+        setImages((prevImages) => [...prevImages, { name: file.name, url }]);
+
+        // Agrega la URL al estado del producto
+        setProduct((prevProduct) => ({
+          ...prevProduct,
+          images: [...prevProduct.images, url],
+        }));
+      } catch (error) {
+        console.error('Error al subir el archivo:', error);
+      }
+    }
+  };
+
   return (
-    
     <div className='mx-10 bg-gray-100 min-h-screen p-6'>
-        <h2 className='text-xl font-medium mb-2'>
-          {editProduct ? 'EDITAR PRODUCTO' : 'AÑADIR NUEVO PRODUCTO'}
-        </h2>
-        <p className='flex text-sm text-gray-600 mb-6 '>
-          Inicio <ChevronRight size={16} className='mx-2 my-0.5' /> Productos{' '}
-          <ChevronRight size={16} className='mx-2 my-0.5' />{' '}
-          {editProduct ? 'Editar producto' : 'Añadir nuevo producto'}
-        </p>
-        {/* Main form */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+      <h2 className='text-xl font-medium mb-2'>
+        {editProduct ? 'EDITAR PRODUCTO' : 'AÑADIR NUEVO PRODUCTO'}
+      </h2>
+      <p className='flex text-sm text-gray-600 mb-6 '>
+        Inicio <ChevronRight size={16} className='mx-2 my-0.5' /> Productos{' '}
+        <ChevronRight size={16} className='mx-2 my-0.5' />{' '}
+        {editProduct ? 'Editar producto' : 'Añadir nuevo producto'}
+      </p>
+      {/* Main form */}
+      <form
+        className='grid grid-cols-1 md:grid-cols-3 gap-8'
+        onSubmit={handleSave}
+      >
         {/* Left Column - Form Fields */}
         <div className='md:col-span-2 space-y-6'>
           {/* Product Name */}
@@ -105,12 +183,11 @@ export default function Insertar() {
               name='name'
               value={product.name}
               onChange={handleInputChange}
-              placeholder='Escriba el nombre aquí'
+              placeholder='Escriba el name aquí'
               className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
             />
           </div>
-
-          {/* Description */}
+          {/* description */}
           <div>
             <label className='block text-sm font-medium mb-2'>
               Descripción
@@ -124,8 +201,56 @@ export default function Insertar() {
               className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
             ></textarea>
           </div>
+          {/* DETALLE */}
+          <div>
+            <label className='block text-sm font-medium mb-2'>
+              Dimensiones
+            </label>
+            <input
+              type='text'
+              value={product.details[0] || ''}
+              onChange={(e) => {
+                const newDetalles = [...product.details];
+                newDetalles[0] = e.target.value;
+                setProduct({ ...product, details: newDetalles });
+              }}
+              placeholder='Ejemplo: 10x20x30 cm'
+              className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
+            />
+          </div>
+          <div>
+            <label className='block text-sm font-medium mb-2'>
+              Tipo de Envío
+            </label>
+            <input
+              type='text'
+              value={product.details[1] || ''}
+              onChange={(e) => {
+                const newDetalles = [...product.details];
+                newDetalles[1] = e.target.value;
+                setProduct({ ...product, details: newDetalles });
+              }}
+              placeholder='Ejemplo: Envío estándar'
+              className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
+            />
+          </div>
+          <div>
+            <label className='block text-sm font-medium mb-2'>
+              Tiempo de Devolución
+            </label>
+            <input
+              type='text'
+              value={product.details[2] || ''}
+              onChange={(e) => {
+                const newDetalles = [...product.details];
+                newDetalles[2] = e.target.value;
+                setProduct({ ...product, details: newDetalles });
+              }}
+              placeholder='Ejemplo: 30 días'
+              className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
+            />
+          </div>
 
-          {/* Category */}
           <div>
             <label className='block text-sm font-medium mb-2'>Categoría</label>
             <select
@@ -137,19 +262,21 @@ export default function Insertar() {
               <option value='' disabled>
                 Seleccione una categoría
               </option>
-              <option value='electronics'>Hombre</option>
-              <option value='fashion'>Mujer</option>
-              <option value='home'>Niño / Niña</option>
+              <option value='Hombre'>Hombre</option>
+              <option value='Mujer'>Mujer</option>
+              <option value='Niño'>Niño</option>
+              <option value='Niña'>Niña</option>
+              <option value='Unisex'>Unisex</option>
             </select>
           </div>
-          {/* Subcategoria */}
+          {/* Subcategory */}
           <div>
             <label className='block text-sm font-medium mb-2'>
               Subcategoría
             </label>
             <select
-              name='category'
-              value={product.category}
+              name='subcategory'
+              value={product.subcategory}
               onChange={handleInputChange}
               className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none text-sm font-extralight'
             >
@@ -169,13 +296,25 @@ export default function Insertar() {
               name='brand'
               value={product.brand}
               onChange={handleInputChange}
-              placeholder='Escriba el nombre de la marca aquí'
+              placeholder='Escriba el name de la brand aquí'
+              className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
+            />
+          </div>
+          {/* Proveedor */}
+          <div>
+            <label className='block text-sm font-medium mb-2'>Proveedor</label>
+            <input
+              type='text'
+              name='provider'
+              value={product.provider}
+              onChange={handleInputChange}
+              placeholder='Escriba el name del provider aquí'
               className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
             />
           </div>
 
           {/* Código*/}
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
             <div>
               <label className='block text-sm font-medium mb-2'>
                 Código (opcional)
@@ -200,18 +339,31 @@ export default function Insertar() {
                 className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
               />
             </div>
-          </div>
 
+            <div>
+              <label className='block text-sm font-medium mb-2'>
+                Unidades Por Paq.
+              </label>
+              <input
+                type='number'
+                name='units_package'
+                value={product.units_package}
+                onChange={handleInputChange}
+                placeholder='1258'
+                className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
+              />
+            </div>
+          </div>
           {/* Prices */}
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
               <label className='block text-sm font-medium mb-2'>
-                Precio regular
+                Precio por Unidad
               </label>
               <input
                 type='text'
-                name='regularPrice'
-                value={product.regularPrice}
+                name='price'
+                value={product.price}
                 onChange={handleInputChange}
                 placeholder='Bs. 1000'
                 className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
@@ -219,19 +371,18 @@ export default function Insertar() {
             </div>
             <div>
               <label className='block text-sm font-medium mb-2'>
-                Precio de venta
+                Precio por Paquete
               </label>
               <input
                 type='text'
-                name='salePrice'
-                value={product.salePrice}
+                name='package_price'
+                value={product.package_price}
                 onChange={handleInputChange}
                 placeholder='Bs. 450'
                 className='w-full border border-gray-300 rounded px-3 py-2 focus:outline-none'
               />
             </div>
           </div>
-
           <>
             <div>
               <label className='block text-sm font-medium mb-2'>Colores</label>
@@ -239,40 +390,43 @@ export default function Insertar() {
                 {colors.map((color, index) => (
                   <button
                     key={index}
+                    type='button'
                     className='flex flex-col items-center'
                     onClick={() => {
-                      const isChecked = product.colors.includes(color.name);
+                      const isChecked = product.colors.some(
+                        (c) => c.color === color.color
+                      );
                       if (isChecked) {
                         setProduct({
                           ...product,
                           colors: product.colors.filter(
-                            (c) => c !== color.name
+                            (c) => c.color !== color.color
                           ),
                         });
                       } else {
                         setProduct({
                           ...product,
-                          colors: [...product.colors, color.name],
+                          colors: [...product.colors, color],
                         });
                       }
                     }}
                   >
                     <span
-                      className={`${
-                        color.color
-                      } w-6 h-6 md:w-8 md:h-8 rounded-full mb-1  border-[3px] ${
-                        product.colors.includes(color.name)
+                      className={`w-6 h-6 md:w-8 md:h-8 rounded-full mb-1  border-[3px] ${
+                        product.colors.some((c) => c.color === color.color)
                           ? 'border-blue-800'
                           : 'border-gray-300'
                       }`}
+                      style={{
+                        backgroundColor: color.codigohx,
+                      }}
                     ></span>
-                    <span className='text-xs'>{color.name}</span>
+                    <span className='text-xs'>{color.color}</span>
                   </button>
                 ))}
               </div>
             </div>
           </>
-
           {/* Tags */}
           <div>
             <label className='block text-sm font-medium mb-2'>Tallas</label>
@@ -310,14 +464,7 @@ export default function Insertar() {
               type='file'
               multiple
               accept='image/*'
-              onChange={(e) => {
-                const files = Array.from(e.target.files);
-                const newImages = files.map((file, idx) => ({
-                  name: `Imagen ${images.length + idx + 1}`, // aquí generamos el nombre automático
-                  url: URL.createObjectURL(file),
-                }));
-                setImages((prevImages) => [...prevImages, ...newImages]);
-              }}
+              onChange={handleFileUpload}
               className='absolute inset-0 opacity-0 cursor-pointer'
             />
             <Image className='w-12 h-12 text-blue-800 mb-2' />
@@ -341,15 +488,18 @@ export default function Insertar() {
                     <div className='h-1 bg-blue-800 w-1/3 rounded-full mt-1'></div>
                   </div>
                   <div className='flex items-center space-x-2'>
-                    {/* Check ✓ */}
                     <div className='w-6 h-6 bg-blue-800 rounded-full flex items-center justify-center text-white'>
                       <CheckCheck className='w-3 h-3' />
                     </div>
-
-                    {/* Botón eliminar */}
                     <button
                       onClick={() => {
                         setImages((prev) => prev.filter((_, i) => i !== index));
+                        setProduct((prevProduct) => ({
+                          ...prevProduct,
+                          images: prevProduct.images.filter(
+                            (_, i) => i !== index
+                          ),
+                        }));
                       }}
                       className='w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white'
                     >
@@ -358,6 +508,42 @@ export default function Insertar() {
                   </div>
                 </div>
               ))}
+
+              {initialData &&
+                product.images.map((image, index) => (
+                  <div key={index} className='flex items-center relative'>
+                    <img
+                      src={image}
+                      alt={image}
+                      className='w-12 h-12 object-cover rounded-md'
+                    />
+                    <div className='ml-4 flex-grow'>
+                      <p className='text-sm'>Imagen {index + 1}</p>
+                      <div className='h-1 bg-blue-800 w-1/3 rounded-full mt-1'></div>
+                    </div>
+                    <div className='flex items-center space-x-2'>
+                      <div className='w-6 h-6 bg-blue-800 rounded-full flex items-center justify-center text-white'>
+                        <CheckCheck className='w-3 h-3' />
+                      </div>
+                      {/*   <button
+                        onClick={() => {
+                          setImages((prev) =>
+                            prev.filter((_, i) => i !== index)
+                          );
+                          setProduct((prevProduct) => ({
+                            ...prevProduct,
+                            images: prevProduct.images.filter(
+                              (_, i) => i !== index
+                            ),
+                          }));
+                        }}
+                        className='w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white'
+                      >
+                        <Trash2 className='w-3 h-3' />
+                      </button> */}
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -374,7 +560,14 @@ export default function Insertar() {
             </button>
           </div>
         </div>
-      </div>
+
+        <button
+          type='submit'
+          className='bg-black text-white px-6 py-2 rounded w-full'
+        >
+          CREAR
+        </button>
+      </form>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   Search,
   User,
+  LogOut,
   ShoppingBag,
   Heart,
   Menu,
@@ -11,12 +12,15 @@ import {
 import Carrito from '../../pages/cliente/carrito';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store/app-store';
+import authService from '../../services/auth-service';
 
 const NavbarCliente = ({ children }) => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isCartOpen, setIsCartOpen } = useAppStore();
   const [activeCategory, setActiveCategory] = useState(null);
+  const store = useAppStore();
+
   const [isFilterOpen, setIsFilterOpen] = useState({
     categories: false,
     color: false,
@@ -61,8 +65,6 @@ const NavbarCliente = ({ children }) => {
       { name: 'Niño', checked: false },
       { name: 'Niña', checked: false },
       { name: 'Unisex', checked: false },
-
-
     ],
     colors: [
       { name: 'Negro', color: 'bg-black', checked: false },
@@ -93,6 +95,7 @@ const NavbarCliente = ({ children }) => {
       { name: 'XXL', checked: false },
     ],
   };
+  console.log('🚀 ~ NavbarCliente ~ filterCategories:', store.filtros);
 
   return (
     <div className='w-full'>
@@ -127,6 +130,16 @@ const NavbarCliente = ({ children }) => {
             <button className='hover:text-gray-600'>
               <Search size={20} />
             </button>
+
+            <button
+              className='hover:text-gray-600'
+              onClick={() => {
+                authService.signOut();
+              }}
+            >
+              <LogOut size={20} />
+            </button>
+
             <button
               className='hover:text-gray-600'
               onClick={() => navigate('/login')}
@@ -227,6 +240,8 @@ const NavbarCliente = ({ children }) => {
                       type='checkbox'
                       id={`category-${index}`}
                       className='mr-2 mt-1 h-4 w-4 shrink-0'
+                      checked={store.filtros.categoria.includes(item.name)}
+                      onChange={() => store.setCategoria(item.name)}
                     />
                     <label
                       htmlFor={`category-${index}`}
@@ -262,7 +277,14 @@ const NavbarCliente = ({ children }) => {
                   {filterCategories.colors.map((color, index) => (
                     <div key={index} className='flex flex-col items-center'>
                       <button
-                        className={`${color.color} w-6 h-6 md:w-8 md:h-8 rounded-full mb-1 border border-gray-300`}
+                        className={`${
+                          color.color
+                        } w-6 h-6 md:w-8 md:h-8 rounded-full mb-1 border ${
+                          store.filtros.color.includes(color.name)
+                            ? 'border-black'
+                            : 'border-gray-300'
+                        }`}
+                        onClick={() => store.setColor(color.name)}
                       ></button>
                       <span className='text-xs'>{color.name}</span>
                     </div>
@@ -294,7 +316,12 @@ const NavbarCliente = ({ children }) => {
                   {filterCategories.sizes.map((size, index) => (
                     <button
                       key={index}
-                      className='border border-gray-300 rounded py-1 px-2 text-xs md:text-sm hover:border-black'
+                      className={`border rounded py-1 px-2 text-xs md:text-sm ${
+                        store.filtros.talla.includes(size.name)
+                          ? 'border-black'
+                          : 'border-gray-300'
+                      }`}
+                      onClick={() => store.setTalla(size.name)}
                     >
                       {size.name}
                     </button>

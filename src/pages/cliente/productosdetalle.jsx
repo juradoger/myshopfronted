@@ -4,6 +4,7 @@ import { ChevronRight, Truck, RotateCcw, Package } from 'lucide-react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import Carrito from './carrito';
 import { useAppStore } from '../../store/app-store';
+import productService from '../../services/productos-service';
 
 export default function DetalleProducto() {
   const params = useParams();
@@ -14,14 +15,15 @@ export default function DetalleProducto() {
   const [selectedSize, setSelectedSize] = useState('M');
   const [mainImage, setMainImage] = useState(0);
   const navigate = useNavigate();
-  const { setIsCartOpen } = useAppStore();
+  const { setIsCartOpen, addToCart } = useAppStore();
 
-  const productId = Number(params?.id);
-  console.log('ID del producto:', productId);
+  const productId = params?.id;
+
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const data = await fetchClothingProductById(productId);
+        const data = await productService.getById(productId);
+        console.log('🚀 ~ getProduct ~ data:', data);
         setProduct(data);
         setLoading(false);
       } catch (error) {
@@ -51,12 +53,7 @@ export default function DetalleProducto() {
 
   const originalPrice = (product.price * 100) / (100 - product.salesPercentage);
 
-  const productImages = [
-    product.image,
-    product.image,
-    product.image,
-    product.image,
-  ];
+  const productImages = product.images || [];
 
   return (
     <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -98,7 +95,9 @@ export default function DetalleProducto() {
             </div>
             <h1 className='text-xl font-medium mb-1'>{product.title}</h1>
             <div className='flex items-center mb-4'>
-              <span className='text-lg font-medium mr-2'>Bs. {product.price}</span>
+              <span className='text-lg font-medium mr-2'>
+                Bs. {product.price}
+              </span>
               <span className='text-gray-500 line-through'>
                 Bs. {originalPrice.toFixed(2)}
               </span>
@@ -124,35 +123,29 @@ export default function DetalleProducto() {
 
             <div className='mb-4'>
               <div className='text-sm font-medium mb-2'>
-                Color:{' '}
-                <span className='font-normal'>
-                  {selectedColor === 'black' ? 'Negro' : 'Marrón'}
-                </span>
+                Color: <span className='font-normal'>{selectedColor}</span>
               </div>
               <div className='flex gap-2'>
-                <button
-                  className={`h-8 w-8 rounded-full bg-black ${
-                    selectedColor === 'black'
-                      ? 'ring-2 ring-black ring-offset-1'
-                      : ''
-                  }`}
-                  onClick={() => setSelectedColor('black')}
-                ></button>
-                <button
-                  className={`h-8 w-8 rounded-full bg-amber-700 ${
-                    selectedColor === 'brown'
-                      ? 'ring-2 ring-black ring-offset-1'
-                      : ''
-                  }`}
-                  onClick={() => setSelectedColor('brown')}
-                ></button>
+                {product.colors.map((color) => (
+                  <button
+                    className={`h-8 w-8 rounded-full  ${
+                      selectedColor === color.name
+                        ? 'ring-2 ring-black ring-offset-1'
+                        : ''
+                    }`}
+                    style={{
+                      backgroundColor: color.codigohx,
+                    }}
+                    onClick={() => setSelectedColor(color.color)}
+                  ></button>
+                ))}
               </div>
             </div>
 
             <div className='mb-6'>
               <div className='text-sm font-medium mb-2'>Talla</div>
               <div className='grid grid-cols-5 gap-2'>
-                {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+                {product.tags.map((size) => (
                   <button
                     key={size}
                     className={`py-2 border ${
@@ -170,7 +163,13 @@ export default function DetalleProducto() {
 
             <button
               className='w-full bg-black text-white py-3 mb-4 hover:bg-gray-800 transition-colors'
-              onClick={() => setIsCartOpen(true)}
+              onClick={() =>
+                addToCart({
+                  ...product,
+                  color: selectedColor,
+                  size: selectedSize,
+                })
+              }
             >
               AÑADIR AL CARRITO
             </button>
@@ -179,40 +178,36 @@ export default function DetalleProducto() {
               <div className='flex items-start'>
                 <Truck className='h-5 w-5 mr-3 flex-shrink-0' />
                 <div>
-                  <div className='text-sm font-medium'>Envío - Gratis</div>
+                  <div className='text-sm font-medium'>
+                    Envío - {product.details[1]}
+                  </div>
                 </div>
               </div>
 
               <div className='flex items-start'>
                 <RotateCcw className='h-5 w-5 mr-3 flex-shrink-0' />
                 <div>
-                  <div className='text-sm font-medium'>Tiempo devolución - 3 dias después</div>
+                  <div className='text-sm font-medium'>
+                    Tiempo devolución - {product.details[2]}
+                  </div>
                 </div>
               </div>
 
-              <div className='flex items-start'>
+              {/*   <div className='flex items-start'>
                 <Package className='h-5 w-5 mr-3 flex-shrink-0' />
                 <div>
                   <div className='text-sm font-medium'>Tiempo entrega </div>
                   <div className='text-xs text-gray-500'>
-                    Recibe en casa normalmente en 3-5 días.
+                    Recibe en casa normalmente en {product.details[0]}
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className='py-6'>
-              <h2 className='text-lg font-medium mb-4'>
-                Corte, chaqueta, todo el estilo.
-              </h2>
+              <h2 className='text-lg font-medium mb-4'>{product.name}</h2>
               <p className='text-sm text-gray-700 mb-4'>
                 {product.description}
-              </p>
-              <p className='text-sm text-gray-700'>
-                Diseñada con materiales sostenibles y de alta calidad, esta
-                chaqueta es atemporal, duradera y versátil. Perfecta para
-                cualquier ocasión, desde un día casual en la oficina hasta una
-                salida nocturna.
               </p>
             </div>
 
@@ -220,18 +215,18 @@ export default function DetalleProducto() {
               <div className='mb-4'>
                 <div className='text-sm font-medium'>Dimensiones</div>
                 <div className='text-sm text-gray-700'>
-                 180 cm, 75 kg, talla M
+                  {product.details[0]}
                 </div>
               </div>
 
               <div className='mb-4'>
                 <div className='text-sm font-medium'>Proveedor</div>
                 <div className='text-sm text-gray-700'>
-                  <div>Tienda Mariela's</div>
+                  <div>{product.provider}</div>
                 </div>
               </div>
 
-              <div>
+              {/*   <div>
                 <div className='text-sm font-medium mb-2'>Sostenibilidad</div>
                 <div className='flex gap-6'>
                   <div className='flex flex-col items-center'>
@@ -278,7 +273,7 @@ export default function DetalleProducto() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

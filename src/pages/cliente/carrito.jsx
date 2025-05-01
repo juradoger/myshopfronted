@@ -1,65 +1,19 @@
 import { useState, useEffect } from 'react';
 import { X, Minus, Plus, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '../../store/app-store';
 
 const Carrito = ({ isOpen, onClose }) => {
   // Datos de ejemplo para el carrito
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'The Organic Cotton Long-Sleeve Turtleneck',
-      size: 'Medio',
-      color: 'Negro',
-      originalPrice: 50,
-      price: 35,
-      discount: '30% Off',
-      quantity: 1,
-      image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-hWaGBiVQIC1fLDK6muaezNe0Dkgrhg.png',
-    },
-    {
-      id: 2,
-      name: 'The ReWool® Oversized Shirt Jacket',
-      size: 'Alto',
-      color: 'Negro',
-      originalPrice: 238,
-      price: 167,
-      discount: '30% Off',
-      quantity: 1,
-      image:
-        'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-hWaGBiVQIC1fLDK6muaezNe0Dkgrhg.png',
-    },
-  ]);
-
-  const [suggestedItem, setSuggestedItem] = useState({
-    id: 3,
-    name: 'The Good Merino Wool Beanie',
-    size: 'Una talla',
-    color: 'Azul claro',
-    price: 35,
-    image:
-      'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-hWaGBiVQIC1fLDK6muaezNe0Dkgrhg.png',
-  });
+  const { carrito, ...store } = useAppStore();
+  console.log('🚀 ~ Carrito ~ carrito:', carrito);
 
   // Calcular el subtotal
-  const subtotal = cartItems.reduce(
+  const subtotal = carrito.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-
-  // Manejar cambios de cantidad
-  const updateQuantity = (id, change) => {
-    setCartItems(
-      cartItems.map((item) => {
-        if (item.id === id) {
-          const newQuantity = Math.max(1, item.quantity + change);
-          return { ...item, quantity: newQuantity };
-        }
-        return item;
-      })
-    );
-  };
 
   // Prevenir scroll cuando el carrito está abierto
   useEffect(() => {
@@ -107,11 +61,11 @@ const Carrito = ({ isOpen, onClose }) => {
             </div>
             {/* Productos en el carrito */}
             <div className='space-y-4'>
-              {cartItems.map((item) => (
+              {carrito.map((item) => (
                 <div key={item.id} className='flex gap-3 pb-4 border-b'>
                   <div className='w-20 h-24 bg-gray-100 flex-shrink-0'>
                     <img
-                      src={item.image || '/placeholder.svg'}
+                      src={item.images[0] || '/placeholder.svg'}
                       alt={item.name}
                       className='w-full h-full object-cover'
                     />
@@ -126,36 +80,33 @@ const Carrito = ({ isOpen, onClose }) => {
                       </div>
                       <button
                         className='text-gray-400 hover:text-gray-600'
-                        onClick={() =>
-                          setCartItems((prev) =>
-                            prev.filter((cartItem) => cartItem.id !== item.id)
-                          )
-                        }
+                        onClick={() => store.removeFromCart(item.id)}
                       >
                         <X size={16} />
                       </button>
                     </div>
                     <div className='flex justify-between items-center mt-2'>
                       <div>
-                        <span className='line-through text-gray-500 text-sm'>
-                          ${item.originalPrice}
-                        </span>{' '}
-                        <span className='font-medium'>${item.price}</span>
-                        <p className='text-red-500 text-xs'>
-                          ({item.discount})
-                        </p>
+                        {/*   <span className='line-through text-gray-500 text-sm'>
+                          Bs {item.originalPrice}
+                        </span>{' '} */}
+                        <span className='font-medium'>Bs {item.price}</span>
                       </div>
                       <div className='flex items-center border rounded'>
                         <button
                           className='px-2 py-1 hover:bg-gray-100'
-                          onClick={() => updateQuantity(item.id, -1)}
+                          onClick={() =>
+                            store.updateCartItem(item.id, item.quantity - 1)
+                          }
                         >
                           <Minus size={16} />
                         </button>
                         <span className='px-2'>{item.quantity}</span>
                         <button
                           className='px-2 py-1 hover:bg-gray-100'
-                          onClick={() => updateQuantity(item.id, 1)}
+                          onClick={() =>
+                            store.updateCartItem(item.id, item.quantity + 1)
+                          }
                         >
                           <Plus size={16} />
                         </button>
@@ -172,7 +123,7 @@ const Carrito = ({ isOpen, onClose }) => {
               <div>
                 <span className='font-medium'>Subtotal</span>{' '}
                 <span className='text-sm text-gray-600'>
-                  ({cartItems.length} Objetos)
+                  ({carrito.length} Objetos)
                 </span>
               </div>
               <span className='font-bold text-lg'>${subtotal}</span>

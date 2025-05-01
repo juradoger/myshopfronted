@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from '../layouts/adminlayout';
 import Productos from '../pages/admin/tablaproductosreal';
 import ClientLayout from '../layouts/clientlayout';
@@ -12,8 +12,11 @@ import TablaProductos from '../pages/admin/tablaproductos';
 import Catalogo from '../pages/cliente/catalogo';
 import DetallesPedido from '../pages/admin/detalleventas';
 import Inicio from '../pages/cliente/inicio';
+import { useAppStore } from '../store/app-store';
 
 export function MisRutas() {
+  const store = useAppStore();
+
   return (
     <BrowserRouter>
       <Routes>
@@ -27,16 +30,23 @@ export function MisRutas() {
 
         <Route path='/login' element={<LoginRegistrar />} />
 
-        <Route path='/admin' element={<AdminLayout />}>
-          {/* Rutas anidadas dentro del AdminLayout */}
-          <Route path='' element={<Dashboard />} />
-          <Route path='productos' element={<Productos />} />
-          <Route path='actualizarproducto/:id' element={<Insertar />} />
-          <Route path='insertarproducto' element={<Insertar />} />
-          <Route path='detalle/:id' element={<DetallesPedido />} />
-          <Route path='tabla' element={<TablaProductos />} />
-          {/* Otras rutas de admin */}
-        </Route>
+        {store.userAuth?.rol === 'ADMIN' ? (
+          <Route path='/admin' element={<AdminLayout />}>
+            {/* Rutas anidadas dentro del AdminLayout */}
+            <Route path='' element={<Dashboard />} />
+            <Route path='productos' element={<Productos />} />
+            <Route
+              path='actualizarproducto/:id'
+              element={<ActualizarProducto />}
+            />
+            <Route path='insertarproducto' element={<Insertar />} />
+            <Route path='detalle/:id' element={<DetallesPedido />} />
+            <Route path='tabla' element={<TablaProductos />} />
+            {/* Otras rutas de admin */}
+          </Route>
+        ) : (
+          <Route path='/*' element={<Navigate to='/' />} />
+        )}
       </Routes>
     </BrowserRouter>
   );
