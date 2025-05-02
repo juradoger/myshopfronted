@@ -27,6 +27,7 @@ export default function DetalleProducto() {
     const getProduct = async () => {
       try {
         const data = await productService.getById(productId);
+        setSelectedColor(data.colors[0].color);
         setProduct(data);
         setLoading(false);
       } catch (error) {
@@ -163,14 +164,14 @@ export default function DetalleProducto() {
               <div className='flex gap-2'>
                 {product.colors?.map((color) => (
                   <button
-                    key={color.name}
+                    key={color.color}
                     className={`h-8 w-8 rounded-full ${
-                      selectedColor === color.name
+                      selectedColor === color.color
                         ? 'ring-2 ring-black ring-offset-1'
                         : ''
                     }`}
                     style={{ backgroundColor: color.codigohx }}
-                    onClick={() => setSelectedColor(color.name)}
+                    onClick={() => setSelectedColor(color.color)}
                   ></button>
                 ))}
               </div>

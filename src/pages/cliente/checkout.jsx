@@ -36,7 +36,7 @@ export default function Checkout() {
   const [message, setMessage] = useState(false);
   const receiptCanvasRef = useRef(null);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     const loadProducts = async () => {
       try {
         const data = await fetchClothingProducts();
@@ -57,7 +57,8 @@ export default function Checkout() {
     };
 
     loadProducts();
-  }, []);
+  }, []); */
+
   const handleClick = async () => {
     setMessage(true);
 
@@ -169,12 +170,8 @@ export default function Checkout() {
     ctx.fillText('Información de Envío', 50, 290);
     ctx.font = '16px Arial';
     ctx.fillText(`Método: ${formData.shippingMethod}`, 50, 320);
-    ctx.fillText(`Tiempo de entrega: ${formData.shippingDays}`, 50, 350);
-    ctx.fillText(
-      `Costo de envío: Bs. ${formData.shippingPrice.toFixed(2)}`,
-      50,
-      380
-    );
+    ctx.fillText(`Tiempo de entrega: ${formData.shippingDays ?? 30}`, 50, 350);
+    ctx.fillText(`Costo de envío: Bs. ${total.toFixed(2)}`, 50, 380);
 
     // Información de pago
     ctx.font = 'bold 20px Arial';
@@ -199,9 +196,10 @@ export default function Checkout() {
 
     let yPos = 590;
     carrito.forEach((product, index) => {
+      console.log('🚀 ~ carrito.forEach ~ product:', product);
       ctx.font = '16px Arial';
       ctx.fillText(`${index + 1}. ${product.name}`, 50, yPos);
-      ctx.fillText(`Bs. ${product.price.toFixed(2)}`, 650, yPos);
+      ctx.fillText(`Bs. ${Number(product.price)?.toFixed(2)}`, 650, yPos);
       yPos += 30;
     });
 
@@ -215,17 +213,17 @@ export default function Checkout() {
     yPos += 50;
     ctx.font = '16px Arial';
     ctx.fillText('Subtotal:', 550, yPos);
-    ctx.fillText(`Bs. ${subtotal.toFixed(2)}`, 650, yPos);
+    ctx.fillText(`Bs. ${total.toFixed(2)}`, 650, yPos);
 
     yPos += 30;
     ctx.fillText('Envío:', 550, yPos);
-    ctx.fillText(`Bs. ${formData.shippingPrice.toFixed(2)}`, 650, yPos);
+    ctx.fillText(`Bs. ${Number(0).toFixed(2)}`, 650, yPos);
 
     yPos += 30;
     ctx.font = 'bold 18px Arial';
     ctx.fillText('Total:', 550, yPos);
-    const finalTotal = subtotal + formData.shippingPrice;
-    ctx.fillText(`Bs. ${finalTotal.toFixed(2)} USD`, 650, yPos);
+
+    ctx.fillText(`Bs. ${total.toFixed(2)} USD`, 650, yPos);
 
     // Información de la tienda
     yPos += 70;
