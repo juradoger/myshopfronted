@@ -50,12 +50,12 @@ const NavbarCliente = ({ children }) => {
 
   const mainCategories = ['Mujer', 'Hombre', 'Acerca de', 'Catalogo'];
   const subCategories = [
-    'Sobre',
-    'Fábricas',
-    'Iniciativas ambientales',
-    'Nuestro compromiso',
-    'Catálogo',
-    'Moda',
+    'Mujer',
+    'Niño',
+    'Niña',
+    'Hombre',
+    'Unisex',
+    'Catalogo',
   ];
 
   const filterCategories = {
@@ -158,8 +158,8 @@ const NavbarCliente = ({ children }) => {
 
       {/* Secondary Navigation */}
       <div className='border-b border-gray-200 hidden md:block sticky top-0 z-20 bg-white py-2'>
-        <div className='px-4'>
-          <div className='flex justify-center space-x-4 md:space-x-6 py-2'>
+        <div className='px-6'>
+          <div className='flex text-center justify-center space-x-6 md:space-x-9 py-2'>
             {subCategories.map((category, index) => (
               <button
                 key={index}

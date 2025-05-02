@@ -34,22 +34,22 @@ export default function Insertar({ initialData }) {
     initialData
       ? initialData
       : {
-          category: '',
-          colors: [],
-          description: '',
-          details: ['', '', ''],
-          images: [],
-          brand: '',
-          name: '',
-          package_price: 0,
-          price: 0,
-          provider: '',
-          sku: '',
-          subcategory: '',
-          tags: [],
-          units_package: 0,
-          stock: 0,
-        }
+        category: '',
+        colors: [],
+        description: '',
+        details: ['', '', ''],
+        images: [],
+        brand: '',
+        name: '',
+        package_price: 0,
+        price: 0,
+        provider: '',
+        sku: '',
+        subcategory: '',
+        tags: [],
+        units_package: 0,
+        stock: 0,
+      }
   );
 
   const [newTag, setNewTag] = useState('');
@@ -83,7 +83,7 @@ export default function Insertar({ initialData }) {
 
   const handleAddDetail = () => {
     if (product.details.length >= 3) {
-      alert('No puedes añadir más de 5 details');
+      alert('No puedes añadir más de 5 detalles');
       return;
     }
 
@@ -131,7 +131,7 @@ export default function Insertar({ initialData }) {
 
   const handleFileUpload = async (e) => {
     if (product.images.length >= 4) {
-      alert('No puedes añadir más de 4 images');
+      alert('No puedes añadir más de 4 imagenes');
       return;
     }
 
@@ -159,12 +159,12 @@ export default function Insertar({ initialData }) {
   return (
     <div className='mx-10 bg-gray-100 min-h-screen p-6'>
       <h2 className='text-xl font-medium mb-2'>
-        {editProduct ? 'EDITAR PRODUCTO' : 'AÑADIR NUEVO PRODUCTO'}
+        {isEdit ? 'EDITAR PRODUCTO' : 'AÑADIR NUEVO PRODUCTO'}
       </h2>
       <p className='flex text-sm text-gray-600 mb-6 '>
         Inicio <ChevronRight size={16} className='mx-2 my-0.5' /> Productos{' '}
         <ChevronRight size={16} className='mx-2 my-0.5' />{' '}
-        {editProduct ? 'Editar producto' : 'Añadir nuevo producto'}
+        {isEdit ? 'Editar producto' : 'Añadir nuevo producto'}
       </p>
       {/* Main form */}
       <form
@@ -283,9 +283,11 @@ export default function Insertar({ initialData }) {
               <option value='' disabled>
                 Seleccione una subcategoría
               </option>
-              <option value='electronics'>Blusa</option>
-              <option value='fashion'>Pantalon</option>
-              <option value='home'>Chaquetas</option>
+              <option value='Blusa'>Blusa</option>
+              <option value='Pantalon'>Pantalon</option>
+              <option value='Chaquetas'>Chaqueta</option>
+              <option value='Vestido'>Vestido</option>
+              <option value='Falda'>Falda</option>
             </select>
           </div>
           {/* Brand */}
@@ -412,11 +414,10 @@ export default function Insertar({ initialData }) {
                     }}
                   >
                     <span
-                      className={`w-6 h-6 md:w-8 md:h-8 rounded-full mb-1  border-[3px] ${
-                        product.colors.some((c) => c.color === color.color)
-                          ? 'border-blue-800'
-                          : 'border-gray-300'
-                      }`}
+                      className={`w-6 h-6 md:w-8 md:h-8 rounded-full mb-1  border-[3px] ${product.colors.some((c) => c.color === color.color)
+                        ? 'border-blue-800'
+                        : 'border-gray-300'
+                        }`}
                       style={{
                         backgroundColor: color.codigohx,
                       }}
@@ -560,14 +561,14 @@ export default function Insertar({ initialData }) {
             </button>
           </div>
         </div>
-
         <button
           type='submit'
-          className='bg-black text-white px-6 py-2 rounded w-full'
+          className='bg-black border-r text-white px-6 py-2 rounded w-225 cursor-pointer'
         >
-          CREAR
+          {isEdit ? 'GUARDAR CAMBIOS' : 'AÑADIR NUEVO'}
         </button>
       </form>
+
     </div>
   );
 }

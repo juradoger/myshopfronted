@@ -57,14 +57,14 @@ export default function DetalleProducto() {
 
   return (
     <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-      <div className='text-xs text-gray-500 mb-4 flex items-center'>
+      <div className='text-sm text-gray-500 mb-4 flex items-center'>
         <span>Inicio</span>
         <ChevronRight className='h-3 w-3 mx-1' />
-        <span>Ropa de hombre</span>
+        <span>Catalogo</span>
         <ChevronRight className='h-3 w-3 mx-1' />
-        <span>Chaquetas</span>
+        <span>{product.name}</span>
         <ChevronRight className='h-3 w-3 mx-1' />
-        <span className='text-black'>{product.title}</span>
+        <span className='text-black'></span>
       </div>
 
       <div className='flex flex-col lg:flex-row gap-8'>
@@ -90,7 +90,7 @@ export default function DetalleProducto() {
 
         <div className='lg:w-1/3'>
           <div className='sticky top-8'>
-            <div className='text-xs text-gray-500 mb-1'>
+            <div className='text-sm text-gray-500 mb-1'>
               Edición limitada • Hecho en Bolivia
             </div>
             <h1 className='text-xl font-medium mb-1'>{product.title}</h1>
@@ -144,7 +144,7 @@ export default function DetalleProducto() {
 
             <div className='mb-6'>
               <div className='text-sm font-medium mb-2'>Talla</div>
-              <div className='grid grid-cols-5 gap-2'>
+              <div className='grid grid-cols-5 gap-2 rounded-sm'>
                 {product.tags?.map((size) => (
                   <button
                     key={size}
@@ -279,7 +279,7 @@ export default function DetalleProducto() {
         </div>
       </div>
 
-      <div className='mt-16'>
+      {/*<div className='mt-16'>
         <h2 className='text-lg font-medium mb-6'>Productos recomendados</h2>
         <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
           <div className='group cursor-pointer'>
@@ -332,7 +332,7 @@ export default function DetalleProducto() {
             <p className='text-xs font-medium mt-1'>Bs. 85</p>
           </div>
         </div>
-      </div>
+      </div>*/}
 
       <div className='mt-16'>
         <h2 className='text-lg font-medium mb-6'>Reseñas</h2>

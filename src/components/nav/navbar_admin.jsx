@@ -51,11 +51,8 @@ const NavbarAdmin = ({ children }) => {
       setIsSearchOpen(!isSearchOpen);
       setIsNotificationsOpen(false);
       setIsAdminOpen(false);
-    } else if (popup === 'notifications') {
-      setIsNotificationsOpen(!isNotificationsOpen);
-      setIsSearchOpen(false);
-      setIsAdminOpen(false);
-    } else if (popup === 'admin') {
+    } 
+    else if (popup === 'admin') {
       setIsAdminOpen(!isAdminOpen);
       setIsSearchOpen(false);
       setIsNotificationsOpen(false);
@@ -87,8 +84,17 @@ const NavbarAdmin = ({ children }) => {
         };
 
         data.forEach((product) => {
-          if (categoryCounts.hasOwnProperty(product.category)) {
-            categoryCounts[product.category]++;
+          const normalizedCategory = product.category.trim().toLowerCase();
+          if (normalizedCategory === 'niño') {
+        categoryCounts['Niño']++;
+          } else if (normalizedCategory === 'niña') {
+        categoryCounts['Niña']++;
+          } else if (normalizedCategory === 'hombre') {
+        categoryCounts['Hombre']++;
+          } else if (normalizedCategory === 'mujer') {
+        categoryCounts['Mujer']++;
+          } else if (normalizedCategory === 'unisex') {
+        categoryCounts['Unisex']++;
           }
         });
 
@@ -138,30 +144,29 @@ const NavbarAdmin = ({ children }) => {
         {/* Separador */}
         <div className='mx-4 border-t border-gray-300 my-2'></div>
 
-        {/* Categorías */}
-        <div className='p-4'>
-          <div className='flex items-center justify-between py-2 px-3 hover:bg-black hover:text-white text-black rounded cursor-pointer mb-2 transition-colors'>
-            <span className='font-medium text-sm'>Categorías</span>
-            <ChevronDown size={16} />
-          </div>
+          <div className='p-4'>
+            <div className='flex items-center justify-between py-2 px-3 hover:bg-black hover:text-white text-black rounded cursor-pointer mb-2 transition-colors'>
+              <span className='font-medium text-sm'>Categorías</span>
+              <ChevronDown size={16} />
+            </div>
 
-          <div className='space-y-1 pl-2'>
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className='flex items-center justify-between py-1.5 px-3 hover:bg-black hover:text-white text-black rounded cursor-pointer transition-colors'
-              >
-                <span className='text-sm'>{category.name}</span>
-                <span className='bg-black text-white px-2 py-0.5 rounded-md text-xs'>
-                  {category.count}
-                </span>
-              </div>
-            ))}
+            <div className='space-y-1 pl-2'>
+              {categories.map((category, index) => (
+                <div
+            key={index}
+            className='flex items-center justify-between py-1.5 px-3 hover:bg-black hover:text-white text-black rounded cursor-pointer transition-colors'
+                >
+            <span className='text-sm'>{category.name}</span>
+            <span className='bg-black text-white w-6 h-6 flex items-center justify-center rounded-sm text-xs'>
+              {category.count}
+            </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </aside>
+              </aside>
 
-      {/* Main Content Area */}
+              {/* Main Content Area */}
       <div
         className={`${
           isSidebarOpen ? 'ml-64' : 'ml-0'
@@ -202,19 +207,6 @@ const NavbarAdmin = ({ children }) => {
               <PopupBusquedaProducto
                 isOpen={isSearchOpen}
                 onClose={() => setIsSearchOpen(false)}
-              />
-            </div>
-            <div className='cursor-pointer relative'>
-              <Bell
-                className='w-5 h-5 text-gray-500'
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePopupToggle('notifications');
-                }}
-              />
-              <PopupNotificaciones
-                isOpen={isNotificationsOpen}
-                onClose={() => setIsNotificationsOpen(false)}
               />
             </div>
             <div
