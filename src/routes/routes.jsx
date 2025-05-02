@@ -42,7 +42,7 @@ export function MisRutas() {
             <Route path='insertarproducto' element={<Insertar />} />
             <Route path='detalle/:id' element={<DetallesPedido />} />
             <Route path='tabla' element={<TablaProductos />} />
-            {/* Otras rutas de admin */}
+            
           </Route>
         ) : (
           <Route path='/*' element={<Navigate to='/' />} />

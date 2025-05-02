@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MapPin, Download, ExternalLink } from 'lucide-react';
 import { useParams } from 'react-router-dom';
-import { pedidos } from '../../data/pedidos';
+
 import pedidosService from '../../services/pedidos-service';
 
 export default function DetallesPedido() {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, MoreVertical } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { pedidos as pedidosDB } from '../../data/pedidos';
+
 import pedidosService from '../../services/pedidos-service';
 
 const TablaProductos = () => {

@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
-import { fetchClothingProductById } from '../../services/api'; // Importamos la función correcta
-import { ChevronRight, Truck, RotateCcw, Package } from 'lucide-react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import Carrito from './carrito';
+import { ChevronRight, Truck, RotateCcw } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppStore } from '../../store/app-store';
 import productService from '../../services/productos-service';
+import ReviewsSection from './reviews';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { FirebaseDB } from '@/firebase/config';
 
 export default function DetalleProducto() {
   const params = useParams();
-
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState('black');
   const [selectedSize, setSelectedSize] = useState('M');
   const [mainImage, setMainImage] = useState(0);
+  const [reviewsSummary, setReviewsSummary] = useState({
+    averageRating: 0,
+    totalReviews: 0
+  });
   const navigate = useNavigate();
   const { setIsCartOpen, addToCart } = useAppStore();
 
@@ -23,7 +27,6 @@ export default function DetalleProducto() {
     const getProduct = async () => {
       try {
         const data = await productService.getById(productId);
-        console.log('🚀 ~ getProduct ~ data:', data);
         setProduct(data);
         setLoading(false);
       } catch (error) {
@@ -33,6 +36,35 @@ export default function DetalleProducto() {
     };
 
     getProduct();
+  }, [productId]);
+
+  // Obtener resumen de reseñas
+  useEffect(() => {
+    if (!productId) return;
+
+    const q = query(
+      collection(FirebaseDB, 'reviews'),
+      where('productId', '==', productId)
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const reviewsData = [];
+      querySnapshot.forEach((doc) => {
+        reviewsData.push(doc.data());
+      });
+
+      const totalReviews = reviewsData.length;
+      const averageRating = totalReviews > 0 
+        ? reviewsData.reduce((sum, review) => sum + review.rating, 0) / totalReviews
+        : 0;
+
+      setReviewsSummary({
+        averageRating,
+        totalReviews
+      });
+    });
+
+    return () => unsubscribe();
   }, [productId]);
 
   if (loading) {
@@ -52,7 +84,6 @@ export default function DetalleProducto() {
   }
 
   const originalPrice = (product.price * 100) / (100 - product.salesPercentage);
-
   const productImages = product.images || [];
 
   return (
@@ -103,14 +134,12 @@ export default function DetalleProducto() {
               </span>
             </div>
 
-            <div className='flex mb-1'></div>
-
             <div className='flex mb-1'>
               {[1, 2, 3, 4, 5].map((star) => (
                 <svg
                   key={star}
                   className={`w-3 h-3 ${
-                    star <= 4 ? 'text-yellow-400' : 'text-gray-300'
+                    star <= Math.round(reviewsSummary.averageRating) ? 'text-yellow-400' : 'text-gray-300'
                   }`}
                   fill='currentColor'
                   viewBox='0 0 20 20'
@@ -118,7 +147,9 @@ export default function DetalleProducto() {
                   <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
                 </svg>
               ))}
-              <span className='text-xs text-gray-500 ml-1'>(12 reseñas)</span>
+              <span className='text-xs text-gray-500 ml-1'>
+                ({reviewsSummary.totalReviews} reseñas)
+              </span>
             </div>
 
             <div className='mb-4'>
@@ -128,15 +159,14 @@ export default function DetalleProducto() {
               <div className='flex gap-2'>
                 {product.colors?.map((color) => (
                   <button
-                    className={`h-8 w-8 rounded-full  ${
+                    key={color.name}
+                    className={`h-8 w-8 rounded-full ${
                       selectedColor === color.name
                         ? 'ring-2 ring-black ring-offset-1'
                         : ''
                     }`}
-                    style={{
-                      backgroundColor: color.codigohx,
-                    }}
-                    onClick={() => setSelectedColor(color.color)}
+                    style={{ backgroundColor: color.codigohx }}
+                    onClick={() => setSelectedColor(color.name)}
                   ></button>
                 ))}
               </div>
@@ -192,16 +222,6 @@ export default function DetalleProducto() {
                   </div>
                 </div>
               </div>
-
-              {/*   <div className='flex items-start'>
-                <Package className='h-5 w-5 mr-3 flex-shrink-0' />
-                <div>
-                  <div className='text-sm font-medium'>Tiempo entrega </div>
-                  <div className='text-xs text-gray-500'>
-                    Recibe en casa normalmente en {product.details[0]}
-                  </div>
-                </div>
-              </div> */}
             </div>
 
             <div className='py-6'>
@@ -225,55 +245,6 @@ export default function DetalleProducto() {
                   <div>{product.provider}</div>
                 </div>
               </div>
-
-              {/*   <div>
-                <div className='text-sm font-medium mb-2'>Sostenibilidad</div>
-                <div className='flex gap-6'>
-                  <div className='flex flex-col items-center'>
-                    <div className='h-10 w-10 flex items-center justify-center border border-gray-300 rounded-full mb-1'>
-                      <svg
-                        className='h-6 w-6'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={1.5}
-                          d='M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5'
-                        />
-                      </svg>
-                    </div>
-                    <span className='text-xs text-gray-500'>
-                      MATERIALES ORGÁNICOS
-                    </span>
-                  </div>
-
-                  <div className='flex flex-col items-center'>
-                    <div className='h-10 w-10 flex items-center justify-center border border-gray-300 rounded-full mb-1'>
-                      <svg
-                        className='h-6 w-6'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={1.5}
-                          d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
-                        />
-                      </svg>
-                    </div>
-                    <span className='text-xs text-gray-500'>
-                      CADENA SOSTENIBLE
-                    </span>
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
@@ -336,127 +307,7 @@ export default function DetalleProducto() {
 
       <div className='mt-16'>
         <h2 className='text-lg font-medium mb-6'>Reseñas</h2>
-
-        <div className='bg-gray-50 p-6 rounded-lg mb-8'>
-          <div className='flex flex-col md:flex-row gap-8'>
-            <div className='md:w-1/3'>
-              <div className='text-sm font-medium mb-2'>5.0 Rating</div>
-              <div className='flex items-center mb-4'>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg
-                    key={star}
-                    className='w-4 h-4 text-yellow-400'
-                    fill='currentColor'
-                    viewBox='0 0 20 20'
-                  >
-                    <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                  </svg>
-                ))}
-              </div>
-            </div>
-
-            <div className='md:w-1/3'>
-              <div className='space-y-2'>
-                {[5, 4, 3, 2, 1].map((rating) => (
-                  <div key={rating} className='flex items-center'>
-                    <span className='text-xs w-3'>{rating}</span>
-                    <div className='w-full bg-gray-200 h-2 mx-2 rounded-full overflow-hidden'>
-                      <div
-                        className='bg-gray-700 h-full rounded-full'
-                        style={{
-                          width:
-                            rating === 5
-                              ? '80%'
-                              : rating === 4
-                              ? '15%'
-                              : rating === 3
-                              ? '5%'
-                              : '0%',
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className='md:w-1/3'>
-              <div className='text-sm font-medium mb-2'>
-                Runs slightly large pantalones
-              </div>
-              <div className='flex items-center justify-between text-xs text-gray-500'>
-                <span>Cortos</span>
-                <span>Largos</span>
-              </div>
-              <div className='w-full bg-gray-200 h-2 my-1 rounded-full overflow-hidden'>
-                <div
-                  className='bg-gray-700 h-full rounded-full'
-                  style={{ width: '60%' }}
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className='flex justify-between items-center mb-6'>
-          <div className='text-sm font-medium'>Filtros</div>
-          <div className='flex items-center'>
-            <span className='text-sm mr-2'>Ordenar por:</span>
-            <select className='text-sm border-b border-gray-300 pb-1 pr-6 focus:outline-none'>
-              <option>Más recientes</option>
-              <option>Mejor valorados</option>
-              <option>Peor valorados</option>
-            </select>
-          </div>
-        </div>
-
-        <div className='space-y-8'>
-          <div className='border-t pt-6'>
-            <div className='flex justify-between items-start mb-2'>
-              <div>
-                <div className='font-medium'>Elizabeth Ortega</div>
-                <div className='flex items-center'>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <svg
-                      key={star}
-                      className='w-3 h-3 text-yellow-400'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                    >
-                      <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                    </svg>
-                  ))}
-                </div>
-              </div>
-              <div className='text-xs text-gray-500'>Hace 14 dias</div>
-            </div>
-            <p className='text-sm mb-4'>Muy comodo y bueno</p>
-          </div>
-
-          <div className='border-t pt-6'>
-            <div className='flex justify-between items-start mb-2'>
-              <div>
-                <div className='font-medium'>Anónimo</div>
-                <div className='flex items-center'>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <svg
-                      key={star}
-                      className='w-3 h-3 text-yellow-400'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                    >
-                      <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                    </svg>
-                  ))}
-                </div>
-              </div>
-              <div className='text-xs text-gray-500'>Hace 14 dias</div>
-            </div>
-            <p className='text-sm mb-4'>
-              Me queda perfecto y es muy comodo, lo recomiendo
-            </p>
-          </div>
-        </div>
+        <ReviewsSection productId={productId} />
       </div>
     </div>
   );
