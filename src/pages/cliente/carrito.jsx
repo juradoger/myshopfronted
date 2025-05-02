@@ -126,7 +126,7 @@ const Carrito = ({ isOpen, onClose }) => {
                   ({carrito.length} Objetos)
                 </span>
               </div>
-              <span className='font-bold text-lg'>${subtotal}</span>
+              <span className='font-bold text-lg'>Bs. {subtotal}</span>
             </div>
             <button
               className='w-full bg-gray-900 text-white py-3 uppercase font-medium hover:bg-gray-800 rounded-sm'

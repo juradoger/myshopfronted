@@ -673,7 +673,7 @@ export default function Checkout() {
                       className='w-16 h-16 object-cover rounded'
                     />
                     <div className='absolute -top-2 -right-2 bg-gray-200 rounded-full w-5 h-5 flex items-center justify-center text-xs'>
-                      {index + 2}
+                      {product.quantity}
                     </div>
                   </div>
                   <div>
@@ -692,8 +692,10 @@ export default function Checkout() {
           <div className='border-b pb-6 mb-6'>
             {carrito.map((product, index) => (
               <div key={index} className='flex justify-between mb-4'>
-                <p>{product.name} </p>
-                <p>45 u./</p>
+                <p>
+                  {product.name} x {product.quantity}
+                </p>
+                <p>Bs. {(product.price * product.quantity).toFixed(2)}</p>
               </div>
             ))}
           </div>
@@ -701,7 +703,7 @@ export default function Checkout() {
           {/* Total */}
           <div className='flex justify-between items-center'>
             <p className='font-medium'>Total</p>
-            <p className='text-xl font-bold'>Bs. {formData.shippingPrice}</p>
+            <p className='text-xl font-bold'>Bs. {total.toFixed(2)}</p>
           </div>
         </div>
       </div>

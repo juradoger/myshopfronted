@@ -122,7 +122,7 @@ export default function ReviewsSection({ productId }) {
                 </svg>
               ))}
             </div>
-            <div className='text-sm'>{reviews.length} reseñas</div>
+            <div className='text-sm'>{reviews.length} Reseñas</div>
           </div>
 
           <div className='md:w-1/3'>
@@ -160,7 +160,7 @@ export default function ReviewsSection({ productId }) {
                     key={star}
                     type='button'
                     onClick={() => setNewReview({...newReview, rating: star})}
-                    className='focus:outline-none'
+                    className='focus:outline-none cursor-pointer'
                   >
                     <svg
                       className={`w-6 h-6 ${star <= newReview.rating ? 'text-yellow-400' : 'text-gray-300'}`}
@@ -191,12 +191,12 @@ export default function ReviewsSection({ productId }) {
               className='px-4 py-2 bg-black text-white rounded hover:bg-gray-800 disabled:opacity-50'
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Enviando...' : 'Enviar Reseña'}
+              {isSubmitting ? 'Enviando...' : 'Enviar tu reseña'}
             </button>
           </form>
         ) : (
           <p className='text-sm text-gray-600'>
-            Por favor <button className='text-blue-600 underline' onClick={() => navigate('/login')}>inicia sesión</button> para dejar una reseña.
+            Por favor... <button className='text-blue-600 underline' onClick={() => navigate('/login')}>Inicia sesión para dejar una reseña...</button> 
           </p>
         )}
       </div>
