@@ -126,7 +126,7 @@ export default function DetalleProducto() {
                 Color: <span className='font-normal'>{selectedColor}</span>
               </div>
               <div className='flex gap-2'>
-                {product.colors.map((color) => (
+                {product.colors?.map((color) => (
                   <button
                     className={`h-8 w-8 rounded-full  ${
                       selectedColor === color.name
@@ -145,7 +145,7 @@ export default function DetalleProducto() {
             <div className='mb-6'>
               <div className='text-sm font-medium mb-2'>Talla</div>
               <div className='grid grid-cols-5 gap-2'>
-                {product.tags.map((size) => (
+                {product.tags?.map((size) => (
                   <button
                     key={size}
                     className={`py-2 border ${

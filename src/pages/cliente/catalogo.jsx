@@ -85,7 +85,7 @@ export default function Catalogo() {
                         {product.salesPercentage}% off
                       </div>
                       <img
-                        src={product.images[0] || '/placeholder.svg'}
+                        src={product.images?.[0] || '/placeholder.svg'}
                         alt={product.title}
                         className='w-full h-[400px] object-cover bg-gray-100'
                         onClick={
@@ -103,7 +103,7 @@ export default function Catalogo() {
                       </p>
                     </div>
                     <div className='mt-2 flex gap-1'>
-                      {product.colors.map((color) => (
+                      {product.colors?.map((color) => (
                         <span
                           key={color}
                           className='w-4 h-4 rounded-full'

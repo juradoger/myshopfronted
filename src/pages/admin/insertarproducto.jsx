@@ -393,7 +393,7 @@ export default function Insertar({ initialData }) {
                     type='button'
                     className='flex flex-col items-center'
                     onClick={() => {
-                      const isChecked = product.colors.some(
+                      const isChecked = product.colors?.some(
                         (c) => c.color === color.color
                       );
                       if (isChecked) {
@@ -431,7 +431,7 @@ export default function Insertar({ initialData }) {
           <div>
             <label className='block text-sm font-medium mb-2'>Tallas</label>
             <div className='flex flex-wrap gap-2 p-2 border-gray-300 min-h-16'>
-              {product.tags.map((tag, index) => (
+              {product.tags?.map((tag, index) => (
                 <span
                   key={index}
                   className='bg-black text-white px-3 py-1 rounded-sm text-sm flex items-center'

@@ -199,7 +199,7 @@ const TablaProductosReal = () => {
                 {productos.map((producto, index) => (
                   <tr key={index} className='text-xs'>
                     <td>
-                      {producto.images[0] ? (
+                      {producto.images?.[0] ? (
                         <img
                           src={producto.images[0]}
                           alt={producto.name}
@@ -219,7 +219,7 @@ const TablaProductosReal = () => {
                     <td className='py-3 px-4'>${producto.package_price}</td>
                     <td className='py-3 px-4'>
                       <div className='flex flex-wrap gap-1'>
-                        {producto.tags.map((tag, i) => (
+                        {producto?.tags?.map((tag, i) => (
                           <span
                             key={i}
                             className='bg-gray-200 rounded px-2 py-0.5 text-xs'
@@ -231,7 +231,7 @@ const TablaProductosReal = () => {
                     </td>
                     <td className='py-3 px-4'>
                       <div className='flex gap-1'>
-                        {producto.colors.map((color, i) => (
+                        {producto?.colors?.map((color, i) => (
                           <div
                             key={i}
                             className='w-4 h-4 rounded-full border'
