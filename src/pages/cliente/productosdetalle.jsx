@@ -16,7 +16,7 @@ export default function DetalleProducto() {
   const [mainImage, setMainImage] = useState(0);
   const [reviewsSummary, setReviewsSummary] = useState({
     averageRating: 0,
-    totalReviews: 0
+    totalReviews: 0,
   });
   const navigate = useNavigate();
   const { setIsCartOpen, addToCart } = useAppStore();
@@ -54,13 +54,15 @@ export default function DetalleProducto() {
       });
 
       const totalReviews = reviewsData.length;
-      const averageRating = totalReviews > 0 
-        ? reviewsData.reduce((sum, review) => sum + review.rating, 0) / totalReviews
-        : 0;
+      const averageRating =
+        totalReviews > 0
+          ? reviewsData.reduce((sum, review) => sum + review.rating, 0) /
+            totalReviews
+          : 0;
 
       setReviewsSummary({
         averageRating,
-        totalReviews
+        totalReviews,
       });
     });
 
@@ -139,7 +141,9 @@ export default function DetalleProducto() {
                 <svg
                   key={star}
                   className={`w-3 h-3 ${
-                    star <= Math.round(reviewsSummary.averageRating) ? 'text-yellow-400' : 'text-gray-300'
+                    star <= Math.round(reviewsSummary.averageRating)
+                      ? 'text-yellow-400'
+                      : 'text-gray-300'
                   }`}
                   fill='currentColor'
                   viewBox='0 0 20 20'
@@ -193,13 +197,15 @@ export default function DetalleProducto() {
 
             <button
               className='w-full bg-black text-white py-3 mb-4 hover:bg-gray-800 transition-colors'
-              onClick={() =>
+              onClick={() => {
                 addToCart({
                   ...product,
                   color: selectedColor,
                   size: selectedSize,
-                })
-              }
+                });
+
+                setIsCartOpen(true);
+              }}
             >
               AÑADIR AL CARRITO
             </button>

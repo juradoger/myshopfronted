@@ -21,14 +21,28 @@ const getAll = async () => {
     const data = snapshot.docs.map(async (doc) => {
       const data = doc.data();
 
-      const products = data.productos.map((productId) => {
-        const product = productosService.getById(productId);
+      const products = data.productos.map(async (productId) => {
+        let product = null;
+
+        try {
+          product = await productosService.getById(productId);
+        } catch {
+          console.log('Error fetching product data:', productId);
+        }
+
         return product;
       });
 
-      const usuario = await userService.getById(data.idUsuario);
+      let usuario = null;
+      try {
+        usuario = await userService.getById(data.idUsuario);
+      } catch {
+        console.error('Error fetching user data:', data.idUsuario);
+      }
 
-      const allProducts = await Promise.all(products);
+      const allProducts = (await Promise.all(products)).filter(
+        (product) => product !== null
+      );
 
       return {
         id: doc.id,

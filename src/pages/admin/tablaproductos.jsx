@@ -132,7 +132,7 @@ const TablaProductos = () => {
                 {pedidos.map((pedido, index) => (
                   <tr key={index} className='text-xs'>
                     <td className='py-3 px-4'>
-                      {pedido.productos.map((p) => p.name).join(', ')}
+                      {pedido.productos?.map((p) => p.name).join(', ')}
                     </td>
                     <td
                       className='py-3 px-4'

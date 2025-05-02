@@ -38,7 +38,9 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       const pedidosData = await pedidosService.getAll();
+
       const usuariosData = await userService.getAll();
+      console.log('🚀 ~ fetchData ~ usuariosData:', usuariosData);
       setPedidos(pedidosData);
       setUsuarios(usuariosData);
 
@@ -62,7 +64,7 @@ export default function Dashboard() {
 
       // Completados y pendientes
       const completados = pedidosData.filter(
-        (p) => p.estado === 'Completado'
+        (p) => p.estado === 'Entregado'
       ).length;
       const pendientes = pedidosData.filter(
         (p) => p.estado === 'Pendiente'
@@ -80,7 +82,7 @@ export default function Dashboard() {
       const productos = await productosService.getAll();
       const top = productos.slice(0, 3).map((p) => ({
         nombre: p.name,
-        ventas: `${Math.floor(Math.random() * 1000)} ventas`,
+        ventas: `${Math.floor(Math.random() * 10)} ventas`,
         precio: `Bs. ${p.price}`,
       }));
       setTopProducts(top);
@@ -99,19 +101,11 @@ export default function Dashboard() {
         <StatCard
           title='Pago alto'
           value={`Bs. ${stats.pagoAlto.toFixed(2)}`}
-          percentage='N/A'
+          percentage=''
         />
         <StatCard title='Cliente top' value={stats.clienteTop} />
-        <StatCard
-          title='Completados'
-          value={stats.completados}
-          percentage='N/A'
-        />
-        <StatCard
-          title='Pendientes'
-          value={stats.pendientes}
-          percentage='N/A'
-        />
+        <StatCard title='Completados' value={stats.completados} percentage='' />
+        <StatCard title='Pendientes' value={stats.pendientes} percentage='' />
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-4'>

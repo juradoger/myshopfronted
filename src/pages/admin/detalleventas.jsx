@@ -8,7 +8,7 @@ export default function DetallesPedido() {
   const params = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [pedido, setPedido] = useState(pedidos.find((p) => p.id === params.id));
+  const [pedido, setPedido] = useState(null);
   console.log(pedido);
 
   useEffect(() => {
