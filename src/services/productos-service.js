@@ -174,6 +174,7 @@ export default {
   update,
   remove,
   // Nuevos métodos para verificar duplicados
+  updateStock,
   checkNameExists,
   checkSkuExists,
 }

@@ -96,6 +96,12 @@ export default function Checkout() {
       alert("Por favor, complete correctamente todos los campos de la tarjeta.")
       return
     }
+    console.log("🚀 ~ handleClick ~ isCardNumberValid:", {
+      isCardNumberValid,
+      isCardHolderValid,
+      isExpiryDateValid,
+      isSecurityCodeValid,
+    })
 
     setMessage(true)
     // Descontar stock
@@ -673,8 +679,8 @@ export default function Checkout() {
             {!message ? (
               <button
                 onClick={async () => {
-                  await handleClick()
-                  setMessage(true)
+               await handleClick()
+               //   setMessage(false)
                 }}
                 className="bg-black text-white px-6 py-3 uppercase text-sm font-medium rounded-sm"
               >
