@@ -579,13 +579,13 @@ export default function Insertar({ initialData }) {
 
           {/* Action Buttons */}
           <div className="mt-6 flex space-x-4">
-            <button
+            {/* <button
               type="button"
               onClick={() => setImages([])}
               className="bg-black text-white px-6 py-2 rounded w-full"
             >
               BORRAR
-            </button>
+            </button> */}
             <button
               type="button"
               onClick={() => navigate("/admin/productos")}
