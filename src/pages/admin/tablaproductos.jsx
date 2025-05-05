@@ -46,14 +46,19 @@ const TablaProductos = () => {
 
   const formatDate = (date) => {
     if (!date) return 'Fecha no disponible';
-    const d = date instanceof Date ? date : date.toDate();
-    return d.toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    try {
+      const d = date instanceof Date ? date : date.toDate();
+      return d.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (e) {
+      console.error('Error formateando fecha:', date, e);
+      return 'Fecha inválida';
+    }
   };
 
   return (
@@ -141,11 +146,16 @@ const TablaProductos = () => {
                       <td className='py-3 px-4'>
                         <div className="flex flex-col gap-1">
                           {pedido.productos?.map((producto, i) => (
-                            <div key={i} className="flex items-center gap-2">
-                              <span className="text-sm font-medium text-gray-800">
-                                {producto.nombre || `Producto ${i + 1}`}
+                            <div key={`${pedido.id}-${producto.id}-${i}`} className="flex items-center gap-2">
+                              <span 
+                                className="text-sm font-medium text-gray-800"
+                                title={`ID: ${producto.id}`}
+                              >
+                                {producto.nombre}
                               </span>
-                              <span className="text-xs text-gray-500">(x{producto.cantidad})</span>
+                              <span className="text-xs text-gray-500">
+                                (x{producto.cantidad}) - Bs. {(producto.precio * producto.cantidad).toFixed(2)}
+                              </span>
                             </div>
                           ))}
                         </div>

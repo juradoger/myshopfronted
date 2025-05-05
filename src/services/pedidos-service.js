@@ -18,31 +18,27 @@ const getAll = async () => {
   try {
     const dataRef = collection(FirebaseDB, FIREBASE_KEY);
     const snapshot = await getDocs(dataRef);
-    const data = snapshot.docs.map(async (doc) => {
+    
+    const data = await Promise.all(snapshot.docs.map(async (doc) => {
       const data = doc.data();
 
-      // Obtener información de productos
+      // Obtener información de productos con manejo robusto
       const products = await Promise.all(
         data.productos.map(async (productData) => {
           try {
-            // Si el producto es un objeto (con id y cantidad)
-            if (typeof productData === 'object' && productData.id) {
-              const product = await productosService.getById(productData.id);
-              return {
-                ...product,
-                cantidad: productData.cantidad || 1
-              };
-            } 
-            // Si es solo el ID (formato antiguo)
-            else {
-              const product = await productosService.getById(productData);
-              return {
-                ...product,
-                cantidad: 1
-              };
-            }
+            const productId = typeof productData === 'object' ? productData.id : productData;
+            const cantidad = typeof productData === 'object' ? (productData.cantidad || 1) : 1;
+            
+            const producto = await productosService.getById(productId);
+            
+            return {
+              id: productId,
+              nombre: producto.nombre || producto.name || `Producto ${productId.slice(0, 4)}`,
+              precio: producto.precio || producto.price || 0,
+              cantidad: cantidad
+            };
           } catch (error) {
-            console.error('Error cargando producto:', productData, error);
+            console.error("Error cargando producto:", productData, error);
             return {
               id: typeof productData === 'object' ? productData.id : productData,
               nombre: `Producto (ID: ${(typeof productData === 'object' ? productData.id : productData).slice(0, 6)}...)`,
@@ -58,15 +54,17 @@ const getAll = async () => {
       try {
         usuario = await userService.getById(data.idUsuario);
       } catch (error) {
-        console.error('Error cargando usuario:', data.idUsuario, error);
+        console.error("Error cargando usuario:", data.idUsuario, error);
         usuario = {
           id: data.idUsuario,
           nombre: `Usuario (ID: ${data.idUsuario.slice(0, 6)}...)`,
+          email: '',
+          telefono: '',
           avatar: '/placeholder.svg'
         };
       }
 
-      // Calcular total si no existe
+      // Calcular total
       const total = data.total || products.reduce((sum, product) => {
         return sum + (product.precio * product.cantidad);
       }, 0);
@@ -74,15 +72,14 @@ const getAll = async () => {
       return {
         id: doc.id,
         ...data,
-        productos: products.filter(p => p !== null),
+        productos: products,
         cliente: usuario,
         fecha: data.fecha?.toDate?.() || data.fecha || new Date(),
         total: total
       };
-    });
+    }));
 
-    const realData = await Promise.all(data);
-    return realData.sort((a, b) => b.fecha - a.fecha); // Ordenar por fecha más reciente
+    return data.sort((a, b) => b.fecha - a.fecha);
   } catch (e) {
     console.error('Error in getAll:', e);
     throw e;
@@ -104,22 +101,17 @@ const getById = async (id) => {
   const products = await Promise.all(
     data.productos.map(async (productData) => {
       try {
-        // Si el producto es un objeto (con id y cantidad)
-        if (typeof productData === 'object' && productData.id) {
-          const producto = await productosService.getById(productData.id);
-          return {
-            ...producto,
-            cantidad: productData.cantidad || 1
-          };
-        } 
-        // Si es solo el ID (formato antiguo)
-        else {
-          const producto = await productosService.getById(productData);
-          return {
-            ...producto,
-            cantidad: 1
-          };
-        }
+        const productId = typeof productData === 'object' ? productData.id : productData;
+        const cantidad = typeof productData === 'object' ? (productData.cantidad || 1) : 1;
+        
+        const producto = await productosService.getById(productId);
+        
+        return {
+          id: productId,
+          nombre: producto.nombre || producto.name || `Producto ${productId.slice(0, 4)}`,
+          precio: producto.precio || producto.price || 0,
+          cantidad: cantidad
+        };
       } catch (error) {
         console.error("Error cargando producto:", productData, error);
         return {
@@ -141,6 +133,8 @@ const getById = async (id) => {
     usuario = {
       id: data.idUsuario,
       nombre: `Usuario (ID: ${data.idUsuario.slice(0, 6)}...)`,
+      email: '',
+      telefono: '',
       avatar: '/placeholder.svg'
     };
   }
@@ -153,7 +147,7 @@ const getById = async (id) => {
   return {
     id: snapshot.id,
     ...data,
-    productos: products.filter(p => p !== null),
+    productos: products,
     cliente: usuario,
     fecha: fechaPedido,
     total: total
@@ -162,12 +156,15 @@ const getById = async (id) => {
 
 const create = async (data) => {
   try {
-    // Asegurar que los productos tengan la estructura correcta
+    // Normalizar estructura de productos
     const productos = data.productos.map(p => {
       if (typeof p === 'string') {
         return { id: p, cantidad: 1 };
       }
-      return p;
+      return {
+        id: p.id,
+        cantidad: p.cantidad || 1
+      };
     });
 
     const pedidoData = {

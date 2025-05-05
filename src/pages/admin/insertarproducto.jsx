@@ -18,11 +18,10 @@ const colors = [
 
 export default function Insertar({ initialData }) {
   const isEdit = initialData && initialData?.id
-
   const navigate = useNavigate()
+  const editProduct = null
 
-  const editProduct = null // productos has been removed, set editProduct to null
-
+  // Estados
   const [product, setProduct] = useState(
     initialData
       ? initialData
@@ -42,23 +41,21 @@ export default function Insertar({ initialData }) {
           tags: [],
           units_package: 0,
           stock: 0,
-        },
+        }
   )
-
   const [newTag, setNewTag] = useState("")
   const [newDetail, setNewDetail] = useState("")
   const [images, setImages] = useState([])
-  // Nuevos estados para manejar errores y estado de envío
   const [error, setError] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Manejadores de eventos
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setProduct({
       ...product,
       [name]: value,
     })
-    // Limpiar error cuando el usuario cambia el nombre o código
     if (name === "name" || name === "sku") {
       setError("")
     }
@@ -117,24 +114,20 @@ export default function Insertar({ initialData }) {
     }
   }
 
-  // Nueva función para verificar duplicados en Firestore
   const checkForDuplicates = async () => {
     try {
-      // Verificar si el nombre del producto ya existe
       if (product.name.trim() === "") {
         setError("El nombre del producto es obligatorio")
         return true
       }
 
       const nameExists = await productService.checkNameExists(product.name)
-
-      // Solo verificar SKU si se ha proporcionado uno
       let skuExists = false
+      
       if (product.sku && product.sku.trim() !== "") {
         skuExists = await productService.checkSkuExists(product.sku)
       }
 
-      // Si estamos editando, ignoramos el producto actual
       if (isEdit) {
         if (nameExists && nameExists !== initialData.id) {
           setError("Ya existe un producto con este nombre")
@@ -169,9 +162,7 @@ export default function Insertar({ initialData }) {
     setError("")
 
     try {
-      // Verificar duplicados antes de guardar
       const hasDuplicates = await checkForDuplicates()
-
       if (hasDuplicates) {
         setIsSubmitting(false)
         return
@@ -198,16 +189,10 @@ export default function Insertar({ initialData }) {
     }
 
     const files = Array.from(e.target.files)
-
     for (const file of files) {
       try {
-        // Sube el archivo a Firebase y obtiene la URL
         const url = await uploadFileToFirebase(file, `productos/${file.name}`)
-
-        // Actualiza el estado de imágenes locales
         setImages((prevImages) => [...prevImages, { name: file.name, url }])
-
-        // Agrega la URL al estado del producto
         setProduct((prevProduct) => ({
           ...prevProduct,
           images: [...prevProduct.images, url],
@@ -226,18 +211,16 @@ export default function Insertar({ initialData }) {
         <ChevronRight size={16} className="mx-2 my-0.5" /> {editProduct ? "Editar producto" : "Añadir nuevo producto"}
       </p>
 
-      {/* Mensaje de error */}
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           <p>{error}</p>
         </div>
       )}
 
-      {/* Main form */}
       <form className="grid grid-cols-1 md:grid-cols-3 gap-8" onSubmit={handleSave}>
-        {/* Left Column - Form Fields */}
+        {/* Columna izquierda - Campos del formulario */}
         <div className="md:col-span-2 space-y-6">
-          {/* Product Name */}
+          {/* Nombre del Producto */}
           <div>
             <label className="block text-sm font-medium mb-2">Nombre del Producto</label>
             <input
@@ -249,7 +232,8 @@ export default function Insertar({ initialData }) {
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
             />
           </div>
-          {/* description */}
+
+          {/* Descripción */}
           <div>
             <label className="block text-sm font-medium mb-2">Descripción</label>
             <textarea
@@ -261,7 +245,8 @@ export default function Insertar({ initialData }) {
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
             ></textarea>
           </div>
-          {/* DETALLE */}
+
+          {/* Detalles */}
           <div>
             <label className="block text-sm font-medium mb-2">Dimensiones</label>
             <input
@@ -276,20 +261,32 @@ export default function Insertar({ initialData }) {
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium mb-2">Tipo de Envío</label>
-            <input
-              type="text"
-              value={product.details[1] || ""}
-              onChange={(e) => {
-                const newDetalles = [...product.details]
-                newDetalles[1] = e.target.value
-                setProduct({ ...product, details: newDetalles })
-              }}
-              placeholder="Ejemplo: Envío estándar"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
-            />
+            <div className="relative">
+              <select
+                value={product.details[1] || ""}
+                onChange={(e) => {
+                  const newDetalles = [...product.details]
+                  newDetalles[1] = e.target.value
+                  setProduct({ ...product, details: newDetalles })
+                }}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none appearance-none"
+              >
+                <option value="">Seleccione tipo de envío</option>
+                <option value="Envío estándar">Envío estándar</option>
+                <option value="Envío express">Envío express</option>
+                <option value="Recogida en tienda">Recogida en tienda</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 
+                </svg>
+              </div>
+            </div>
           </div>
+
           <div>
             <label className="block text-sm font-medium mb-2">Tiempo de Devolución</label>
             <input
@@ -305,6 +302,7 @@ export default function Insertar({ initialData }) {
             />
           </div>
 
+          {/* Categoría y Subcategoría */}
           <div>
             <label className="block text-sm font-medium mb-2">Categoría</label>
             <select
@@ -313,9 +311,7 @@ export default function Insertar({ initialData }) {
               onChange={handleInputChange}
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none text-sm font-extralight"
             >
-              <option value="" disabled>
-                Seleccione una categoría
-              </option>
+              <option value="" disabled>Seleccione una categoría</option>
               <option value="Hombre">Hombre</option>
               <option value="Mujer">Mujer</option>
               <option value="Niño">Niño</option>
@@ -323,7 +319,7 @@ export default function Insertar({ initialData }) {
               <option value="Unisex">Unisex</option>
             </select>
           </div>
-          {/* Subcategory */}
+
           <div>
             <label className="block text-sm font-medium mb-2">Subcategoría</label>
             <select
@@ -332,9 +328,7 @@ export default function Insertar({ initialData }) {
               onChange={handleInputChange}
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none text-sm font-extralight"
             >
-              <option value="" disabled>
-                Seleccione una subcategoría
-              </option>
+              <option value="" disabled>Seleccione una subcategoría</option>
               <option value="electronics">Blusa</option>
               <option value="Pantalon">Pantalon</option>
               <option value="home">Chaquetas</option>
@@ -344,7 +338,8 @@ export default function Insertar({ initialData }) {
               <option value="camiseta">Camiseta</option>
             </select>
           </div>
-          {/* Brand */}
+
+          {/* Marca y Proveedor */}
           <div>
             <label className="block text-sm font-medium mb-2">Marca</label>
             <input
@@ -356,7 +351,7 @@ export default function Insertar({ initialData }) {
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
             />
           </div>
-          {/* Proveedor */}
+
           <div>
             <label className="block text-sm font-medium mb-2">Proveedor</label>
             <input
@@ -369,7 +364,7 @@ export default function Insertar({ initialData }) {
             />
           </div>
 
-          {/* Código*/}
+          {/* Código, Unidades y Paquetes */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Código (opcional)</label>
@@ -393,7 +388,6 @@ export default function Insertar({ initialData }) {
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none"
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium mb-2">Unidades Por Paq.</label>
               <input
@@ -406,7 +400,8 @@ export default function Insertar({ initialData }) {
               />
             </div>
           </div>
-          {/* Prices */}
+
+          {/* Precios */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Precio por Unidad</label>
@@ -431,45 +426,44 @@ export default function Insertar({ initialData }) {
               />
             </div>
           </div>
-          <>
-            <div>
-              <label className="block text-sm font-medium mb-2">Colores</label>
-              <div className="flex flex-wrap gap-2 p-2 border-gray-300 min-h-16">
-                {colors.map((color, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="flex flex-col items-center"
-                    onClick={() => {
-                      const isChecked = product.colors.some((c) => c.color === color.color)
-                      if (isChecked) {
-                        setProduct({
-                          ...product,
-                          colors: product.colors.filter((c) => c.color !== color.color),
-                        })
-                      } else {
-                        setProduct({
-                          ...product,
-                          colors: [...product.colors, color],
-                        })
-                      }
-                    }}
-                  >
-                    <span
-                      className={`w-6 h-6 md:w-8 md:h-8 rounded-full mb-1  border-[3px] ${
-                        product.colors.some((c) => c.color === color.color) ? "border-blue-800" : "border-gray-300"
-                      }`}
-                      style={{
-                        backgroundColor: color.codigohx,
-                      }}
-                    ></span>
-                    <span className="text-xs">{color.color}</span>
-                  </button>
-                ))}
-              </div>
+
+          {/* Colores */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Colores</label>
+            <div className="flex flex-wrap gap-2 p-2 border-gray-300 min-h-16">
+              {colors.map((color, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="flex flex-col items-center"
+                  onClick={() => {
+                    const isChecked = product.colors.some((c) => c.color === color.color)
+                    if (isChecked) {
+                      setProduct({
+                        ...product,
+                        colors: product.colors.filter((c) => c.color !== color.color),
+                      })
+                    } else {
+                      setProduct({
+                        ...product,
+                        colors: [...product.colors, color],
+                      })
+                    }
+                  }}
+                >
+                  <span
+                    className={`w-6 h-6 md:w-8 md:h-8 rounded-full mb-1 border-[3px] ${
+                      product.colors.some((c) => c.color === color.color) ? "border-blue-800" : "border-gray-300"
+                    }`}
+                    style={{ backgroundColor: color.codigohx }}
+                  ></span>
+                  <span className="text-xs">{color.color}</span>
+                </button>
+              ))}
             </div>
-          </>
-          {/* Tags */}
+          </div>
+
+          {/* Tallas */}
           <div>
             <label className="block text-sm font-medium mb-2">Tallas</label>
             <div className="flex flex-wrap gap-2 p-2 border-gray-300 min-h-16">
@@ -492,9 +486,10 @@ export default function Insertar({ initialData }) {
             </div>
           </div>
         </div>
-        {/* Right Column - Images */}
+
+        {/* Columna derecha - Imágenes */}
         <div>
-          {/* Image Upload Area */}
+          {/* Área de carga de imágenes */}
           <div className="bg-gray-200 rounded-lg p-6 text-center flex flex-col items-center justify-center h-52 mb-6 relative">
             <input
               type="file"
@@ -508,7 +503,7 @@ export default function Insertar({ initialData }) {
             <p className="text-gray-500 text-sm">Formatos: jpeg, png</p>
           </div>
 
-          {/* Product Gallery */}
+          {/* Galería de productos */}
           <div>
             <h3 className="text-sm font-medium mb-4">Galería de productos</h3>
             <div className="space-y-4">
@@ -555,37 +550,14 @@ export default function Insertar({ initialData }) {
                       <div className="w-6 h-6 bg-blue-800 rounded-full flex items-center justify-center text-white">
                         <CheckCheck className="w-3 h-3" />
                       </div>
-                      {/*   <button
-                        onClick={() => {
-                          setImages((prev) =>
-                            prev.filter((_, i) => i !== index)
-                          );
-                          setProduct((prevProduct) => ({
-                            ...prevProduct,
-                            images: prevProduct.images.filter(
-                              (_, i) => i !== index
-                            ),
-                          }));
-                        }}
-                        className='w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white'
-                      >
-                        <Trash2 className='w-3 h-3' />
-                      </button> */}
                     </div>
                   </div>
                 ))}
             </div>
           </div>
 
-          {/* Action Buttons */}
+          {/* Botones de acción */}
           <div className="mt-6 flex space-x-4">
-            {/* <button
-              type="button"
-              onClick={() => setImages([])}
-              className="bg-black text-white px-6 py-2 rounded w-full"
-            >
-              BORRAR
-            </button> */}
             <button
               type="button"
               onClick={() => navigate("/admin/productos")}
@@ -595,6 +567,8 @@ export default function Insertar({ initialData }) {
             </button>
           </div>
         </div>
+
+        {/* Botón de enviar */}
         <button
           type="submit"
           disabled={isSubmitting}
@@ -605,7 +579,6 @@ export default function Insertar({ initialData }) {
           {isSubmitting ? "GUARDANDO..." : isEdit ? "ACTUALIZAR" : "CREAR"}
         </button>
       </form>
-
     </div>
   )
 }
