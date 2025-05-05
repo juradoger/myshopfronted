@@ -13,6 +13,8 @@ import Catalogo from '../pages/cliente/catalogo';
 import DetallesPedido from '../pages/admin/detalleventas';
 import Inicio from '../pages/cliente/inicio';
 import { useAppStore } from '../store/app-store';
+import HistorialCompras from '../pages/cliente/historial_compra';
+import Nosotros from '../pages/cliente/nosotros';
 
 export function MisRutas() {
   const store = useAppStore();
@@ -25,6 +27,8 @@ export function MisRutas() {
           {/* Rutas anidadas dentro del ClientLayout */}
           <Route path='/' element={<Inicio />} />
           <Route path='/catalogo' element={<Catalogo />} />
+          <Route path='/historial' element={<HistorialCompras/>} />
+          <Route path='/nosotros' element={<Nosotros/>} />
           <Route path='/detalleproducto/:id' element={<DetalleProducto />} />
         </Route>
 

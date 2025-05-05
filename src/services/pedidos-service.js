@@ -21,60 +21,75 @@ const getAll = async () => {
     const data = snapshot.docs.map(async (doc) => {
       const data = doc.data();
 
-      const products = data.productos.map(async (productId) => {
-        let product = null;
+      // Obtener información de productos
+      const products = await Promise.all(
+        data.productos.map(async (productData) => {
+          try {
+            // Si el producto es un objeto (con id y cantidad)
+            if (typeof productData === 'object' && productData.id) {
+              const product = await productosService.getById(productData.id);
+              return {
+                ...product,
+                cantidad: productData.cantidad || 1
+              };
+            } 
+            // Si es solo el ID (formato antiguo)
+            else {
+              const product = await productosService.getById(productData);
+              return {
+                ...product,
+                cantidad: 1
+              };
+            }
+          } catch (error) {
+            console.error('Error cargando producto:', productData, error);
+            return {
+              id: typeof productData === 'object' ? productData.id : productData,
+              nombre: `Producto (ID: ${(typeof productData === 'object' ? productData.id : productData).slice(0, 6)}...)`,
+              precio: 0,
+              cantidad: typeof productData === 'object' ? (productData.cantidad || 1) : 1
+            };
+          }
+        })
+      );
 
-        try {
-          product = await productosService.getById(productId);
-        } catch {
-          console.log('Error fetching product data:', productId);
-        }
-
-        return product;
-      });
-
+      // Obtener información del usuario
       let usuario = null;
       try {
         usuario = await userService.getById(data.idUsuario);
-      } catch {
-        console.error('Error fetching user data:', data.idUsuario);
+      } catch (error) {
+        console.error('Error cargando usuario:', data.idUsuario, error);
+        usuario = {
+          id: data.idUsuario,
+          nombre: `Usuario (ID: ${data.idUsuario.slice(0, 6)}...)`,
+          avatar: '/placeholder.svg'
+        };
       }
 
-      const allProducts = (await Promise.all(products)).filter(
-        (product) => product !== null
-      );
+      // Calcular total si no existe
+      const total = data.total || products.reduce((sum, product) => {
+        return sum + (product.precio * product.cantidad);
+      }, 0);
 
       return {
         id: doc.id,
-        ...doc.data(),
-        productos: allProducts,
+        ...data,
+        productos: products.filter(p => p !== null),
         cliente: usuario,
+        fecha: data.fecha?.toDate?.() || data.fecha || new Date(),
+        total: total
       };
     });
 
     const realData = await Promise.all(data);
-
-    return realData;
+    return realData.sort((a, b) => b.fecha - a.fecha); // Ordenar por fecha más reciente
   } catch (e) {
     console.error('Error in getAll:', e);
     throw e;
   }
 };
 
-/* const getCount = async () => {
-  try {
-    const dataRef = collection(FirebaseDB, FIREBASE_KEY);
-    const snapshot = await getCountFromServer(dataRef);
-    const total = snapshot.data().count;
-    return total;
-  } catch (e) {
-    console.error('Error in getCount:', e);
-    throw e;
-  }
-}; */
-
 const getById = async (id) => {
-  console.log('🚀 ~ getById ~ id:', id);
   const dataRef = doc(FirebaseDB, FIREBASE_KEY, id);
   const snapshot = await getDoc(dataRef);
 
@@ -82,46 +97,89 @@ const getById = async (id) => {
 
   const data = snapshot.data();
 
-  const products = data.productos.map((productId) => {
-    const product = productosService.getById(productId);
-    return product;
-  });
+  // Convertir la fecha de Firebase Timestamp a Date si es necesario
+  const fechaPedido = data.fecha?.toDate ? data.fecha.toDate() : data.fecha;
 
-  const usuario = await userService.getById(data.idUsuario);
+  // Obtener información completa de cada producto
+  const products = await Promise.all(
+    data.productos.map(async (productData) => {
+      try {
+        // Si el producto es un objeto (con id y cantidad)
+        if (typeof productData === 'object' && productData.id) {
+          const producto = await productosService.getById(productData.id);
+          return {
+            ...producto,
+            cantidad: productData.cantidad || 1
+          };
+        } 
+        // Si es solo el ID (formato antiguo)
+        else {
+          const producto = await productosService.getById(productData);
+          return {
+            ...producto,
+            cantidad: 1
+          };
+        }
+      } catch (error) {
+        console.error("Error cargando producto:", productData, error);
+        return {
+          id: typeof productData === 'object' ? productData.id : productData,
+          nombre: `Producto (ID: ${(typeof productData === 'object' ? productData.id : productData).slice(0, 6)}...)`,
+          precio: 0,
+          cantidad: typeof productData === 'object' ? (productData.cantidad || 1) : 1
+        };
+      }
+    })
+  );
+
+  // Obtener información del usuario
+  let usuario = null;
+  try {
+    usuario = await userService.getById(data.idUsuario);
+  } catch (error) {
+    console.error("Error cargando usuario:", data.idUsuario, error);
+    usuario = {
+      id: data.idUsuario,
+      nombre: `Usuario (ID: ${data.idUsuario.slice(0, 6)}...)`,
+      avatar: '/placeholder.svg'
+    };
+  }
+
+  // Calcular total si no existe
+  const total = data.total || products.reduce((sum, product) => {
+    return sum + (product.precio * product.cantidad);
+  }, 0);
 
   return {
     id: snapshot.id,
     ...data,
-    productos: await Promise.all(products),
+    productos: products.filter(p => p !== null),
     cliente: usuario,
+    fecha: fechaPedido,
+    total: total
   };
 };
 
-/* const getByIdRealtime = (id, callback) => {
-  if (!id) return null;
-
-  const dataRef = doc(FirebaseDB, FIREBASE_KEY, id);
-
-  return onSnapshot(
-    dataRef,
-    (snapshot) => {
-      if (snapshot.exists()) {
-        callback({ id: snapshot.id, ...snapshot.data() });
-      } else {
-        callback(null);
-      }
-    },
-    (error) => {
-      console.error('Error getting real-time document:', error);
-    }
-  );
-};
- */
 const create = async (data) => {
   try {
+    // Asegurar que los productos tengan la estructura correcta
+    const productos = data.productos.map(p => {
+      if (typeof p === 'string') {
+        return { id: p, cantidad: 1 };
+      }
+      return p;
+    });
+
+    const pedidoData = {
+      ...data,
+      productos,
+      fecha: new Date(),
+      estado: data.estado || 'Pendiente'
+    };
+
     const document = await addDoc(
       collection(FirebaseDB, FIREBASE_KEY),
-      sanitizeData(data)
+      sanitizeData(pedidoData)
     );
     return document.id;
   } catch (e) {
@@ -154,9 +212,7 @@ const remove = async (id) => {
 
 export default {
   getAll,
-  //getCount,
   getById,
-  //getByIdRealtime,
   create,
   update,
   remove,

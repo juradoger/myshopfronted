@@ -188,7 +188,7 @@ export default function ReviewsSection({ productId }) {
             
             <button
               type='submit'
-              className='px-4 py-2 bg-black text-white rounded hover:bg-gray-800 disabled:opacity-50'
+              className='px-4 py-2 bg-black text-white rounded hover:bg-gray-800 disabled:opacity-50 cursor-pointer'
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Enviando...' : 'Enviar tu reseña'}

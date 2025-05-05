@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { FirebaseAuth } from './firebase/config';
 import { useAppStore } from './store/app-store';
 import userService from './services/user-service';
+import ChatBubble from './components/contenido/Contenido';
 
 function App() {
   const [status, setStatus] = useState('in progress');
@@ -39,6 +40,8 @@ function App() {
   return (
     <>
       <MisRutas />
+      <ChatBubble/>
+      
     </>
   );
 }

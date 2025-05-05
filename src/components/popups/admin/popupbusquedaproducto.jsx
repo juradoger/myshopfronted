@@ -6,9 +6,9 @@ const PopupBusquedaProducto = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const products = [
-    { name: 'nike', image: '/placeholder.svg?height=40&width=40' },
-    { name: 'Adidas', image: '/placeholder.svg?height=40&width=40' },
-    { name: 'Fila', image: '/placeholder.svg?height=40&width=40' },
+    { name: 'Calvin Klein', image: '/placeholder.svg?height=40&width=40' },
+    { name: 'Place', image: '/placeholder.svg?height=40&width=40' },
+    { name: 'Gioberti', image: '/placeholder.svg?height=40&width=40' },
   ];
 
   return (
